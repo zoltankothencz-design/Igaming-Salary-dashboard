@@ -1,0 +1,168 @@
+{
+  "generated": "2026-08-17T12:14:02.718960+00:00",
+  "cutoff_days": 2,
+  "companies_scanned": 16,
+  "total_fresh_jobs": 0,
+  "results": [
+    {
+      "company": "Anakatech",
+      "type": "operator",
+      "url": "https://www.linkedin.com/company/anakatech/jobs/",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "B2Spin",
+      "type": "operator",
+      "url": "https://jobs.ashbyhq.com/b2spin",
+      "platform": "ashby",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Betclic Group",
+      "type": "operator",
+      "url": "https://betclicgroup.com/en/people",
+      "platform": "bdata",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Betsson",
+      "type": "operator",
+      "url": "https://betssongroup.com/careers/available-jobs/",
+      "platform": "bdata",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Eeze",
+      "type": "operator",
+      "url": "https://careers.eeze.com/jobs",
+      "platform": "generic",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Entain",
+      "type": "operator",
+      "url": "https://entaincareers.com/job-search/?perPage=25",
+      "platform": "bdata",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Exco Game Studio",
+      "type": "operator",
+      "url": "https://www.linkedin.com/company/excogg/jobs/",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Finnplay Technologies",
+      "type": "operator",
+      "url": "https://finnplay.teamtailor.com/jobs",
+      "platform": "teamtailor",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Fungies.io",
+      "type": "operator",
+      "url": "https://www.linkedin.com/company/fungies/jobs/",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "LeoVegas",
+      "type": "operator",
+      "url": "https://www.linkedin.com/company/leovegasgroup/jobs/",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Lottomart",
+      "type": "operator",
+      "url": "https://lottomart.com/en-gb/careers",
+      "platform": "generic",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Midnite",
+      "type": "operator",
+      "url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4453721876&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&geoId=101165590&f_C=23525800",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Novibet",
+      "type": "operator",
+      "url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4442062806&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&geoId=104677530&f_C=17960368",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Over99.com",
+      "type": "operator",
+      "url": "https://hiring.over99.com/jobs",
+      "platform": "generic",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "RecruitGibraltar",
+      "type": "recruiter",
+      "url": "https://www.recruitgibraltar.com/jobsearchresults",
+      "platform": "generic",
+      "status": "ok",
+      "note": "",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    },
+    {
+      "company": "Stakemate",
+      "type": "operator",
+      "url": "https://www.linkedin.com/company/stakemate/jobs/",
+      "platform": "linkedin",
+      "status": "skipped",
+      "note": "LinkedIn: use napi-igaming-karrier-scan instead",
+      "jobs": [],
+      "scanned_at": "2026-08-17T12:14:02.718960+00:00"
+    }
+  ]
+}

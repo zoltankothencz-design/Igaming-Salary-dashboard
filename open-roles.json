@@ -1,0 +1,200 @@
+{
+  "generated": "2026-08-17T14:17:26.365532Z",
+  "source": "Marveen job-hunter + igaming agent logs",
+  "count": 9,
+  "roles": [
+    {
+      "title": "- VBET Casino Manager Denmark: online-only, skip - B2Spin Head of VIP Gibraltar:",
+      "market": "gibraltar",
+      "roleCategory": "crmVipOps",
+      "source": "job-hunter",
+      "date": "2026-08-17",
+      "snippet": "- VBET Casino Manager Denmark: online-only, skip - B2Spin Head of VIP Gibraltar: online-only, skip - MrQ Senior Casino Executive: online-only, skip - Grupo Mambo Director of Operations Ibiza: F&B szek"
+    },
+    {
+      "title": "## 20:05 -- Napi scan pótolva (11:00 elmaradt) Portálok: LinkedIn EU (5+ keresés",
+      "market": "gibraltar",
+      "roleCategory": null,
+      "source": "job-hunter",
+      "date": "2026-08-14",
+      "snippet": "## 20:05 -- Napi scan pótolva (11:00 elmaradt) Portálok: LinkedIn EU (5+ keresés), profession.hu, pentasia.com page1, igamingrecruitment.io, bettingjobs.com (via bdata). 1 erős: Dinotech Fraud Lead Ma"
+    },
+    {
+      "title": "- MLRO Kaizen Gaming Malta (22h ago) - AML in gaming de formális AML képzés/bach",
+      "market": "malta",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-07-31",
+      "snippet": "- MLRO Kaizen Gaming Malta (22h ago) - AML in gaming de formális AML képzés/bachelor required - Head of Compliance BettingJobs/Malta (40m ago) - 7+ év online gambling compliance + MGA expertise requir"
+    },
+    {
+      "title": "## 11:05 -- Napi scan 2026-07-22 5 portal szkennelve (LinkedIn, Profession.hu, D",
+      "market": "gibraltar",
+      "roleCategory": null,
+      "source": "job-hunter",
+      "date": "2026-07-22",
+      "snippet": "## 11:05 -- Napi scan 2026-07-22 5 portal szkennelve (LinkedIn, Profession.hu, Dreamjobs, Pentasia, GamblingCareers). LinkedIn: 316 talalat, 40 igaming-relevans. Top 3 prezentalt: (1) PokerStars Senio"
+    },
+    {
+      "title": "NAPI SCAN 2026-08-14 (pótolt, 11:00 elmaradt): 1 erős találat + 2 közepes. (1) D",
+      "market": "gibraltar",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-08-14",
+      "snippet": "NAPI SCAN 2026-08-14 (pótolt, 11:00 elmaradt): 1 erős találat + 2 közepes. (1) Dinotech Ltd - Fraud & Abuse Prevention Lead / Saint Julian Malta / Remote EU / https://www.linkedin.com/jobs/view/445357"
+    },
+    {
+      "title": "NAPI SCAN 2026-07-18 találatok: (1) Live Casino Operations Manager -- LeoVegas G",
+      "market": "gibraltar",
+      "roleCategory": "director",
+      "source": "job-hunter",
+      "date": "2026-07-18",
+      "snippet": "NAPI SCAN 2026-07-18 találatok: (1) Live Casino Operations Manager -- LeoVegas Group / Malta / linkedin.com/jobs/view/live-casino-operations-manager-at-leovegas-group-4441356083 / 5 csillag -- Live Ca"
+    },
+    {
+      "title": "NAPI SCAN 2026-07-17 találatok: (1) B2C Managing Director -- Thelivering/The Mil",
+      "market": "malta",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-07-17",
+      "snippet": "NAPI SCAN 2026-07-17 találatok: (1) B2C Managing Director -- Thelivering/The Mill Adventure / Malta Remote / linkedin.com/jobs/view/4436662085 / 5 csillag -- online casino operator MD szerepkör (Casin"
+    },
+    {
+      "title": "NAPI SCAN 2026-07-14 talalatok: (1) Responsible Gambling Specialist -- Torrero /",
+      "market": "malta",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-07-14",
+      "snippet": "NAPI SCAN 2026-07-14 talalatok: (1) Responsible Gambling Specialist -- Torrero / Qormi Malta On-site / linkedin.com/jobs/view/4440513899/ / 4 csillag -- AML, Source of Funds, player protection, iGamin"
+    },
+    {
+      "title": "NAPI SCAN 2026-07-08 találatok: (1) Head of Casino / Rhino Entertainment Group /",
+      "market": "malta",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-07-08",
+      "snippet": "NAPI SCAN 2026-07-08 találatok: (1) Head of Casino / Rhino Entertainment Group / St Julians Malta Hybrid / gamblingcareers.com/job/164373/head-of-casino/ -- elvárás online casino tapasztalat, de 4 csi"
+    }
+  ],
+  "watchedCompanies": [
+    {
+      "id": 6,
+      "name": "Anakatech",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/company/anakatech/jobs/",
+      "active": true
+    },
+    {
+      "id": 9,
+      "name": "B2Spin",
+      "type": "operator",
+      "career_url": "https://jobs.ashbyhq.com/b2spin",
+      "active": true
+    },
+    {
+      "id": 8,
+      "name": "Betclic Group",
+      "type": "operator",
+      "career_url": "https://betclicgroup.com/en/people",
+      "active": true
+    },
+    {
+      "id": 19,
+      "name": "Betsson",
+      "type": "operator",
+      "career_url": "https://betssongroup.com/careers/available-jobs/",
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Eeze",
+      "type": "operator",
+      "career_url": "https://careers.eeze.com/jobs",
+      "active": true
+    },
+    {
+      "id": 1,
+      "name": "Entain",
+      "type": "operator",
+      "career_url": "https://entaincareers.com/job-search/?perPage=25",
+      "active": true
+    },
+    {
+      "id": 5,
+      "name": "Exco Game Studio",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/company/excogg/jobs/",
+      "active": true
+    },
+    {
+      "id": 4,
+      "name": "Finnplay Technologies",
+      "type": "operator",
+      "career_url": "https://finnplay.teamtailor.com/jobs",
+      "active": true
+    },
+    {
+      "id": 18,
+      "name": "Fungies.io",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/company/fungies/jobs/",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "LeoVegas",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/company/leovegasgroup/jobs/",
+      "active": true
+    },
+    {
+      "id": 14,
+      "name": "Lottomart",
+      "type": "operator",
+      "career_url": "https://lottomart.com/en-gb/careers",
+      "active": true
+    },
+    {
+      "id": 13,
+      "name": "Midnite",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4453721876&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&geoId=101165590&f_C=23525800",
+      "active": true
+    },
+    {
+      "id": 12,
+      "name": "Novibet",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4442062806&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&geoId=104677530&f_C=17960368",
+      "active": true
+    },
+    {
+      "id": 7,
+      "name": "Over99.com",
+      "type": "operator",
+      "career_url": "https://hiring.over99.com/jobs",
+      "active": true
+    },
+    {
+      "id": 20,
+      "name": "RecruitGibraltar",
+      "type": "recruiter",
+      "career_url": "https://www.recruitgibraltar.com/jobsearchresults",
+      "active": true
+    },
+    {
+      "id": 10,
+      "name": "RISK inc",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/jobs/search-results/?f_C=98672362&geoId=106670623",
+      "active": true
+    },
+    {
+      "id": 15,
+      "name": "Stakemate",
+      "type": "operator",
+      "career_url": "https://www.linkedin.com/company/stakemate/jobs/",
+      "active": true
+    }
+  ]
+}
