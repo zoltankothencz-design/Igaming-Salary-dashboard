@@ -1,8 +1,16 @@
 {
-  "generated": "2026-08-17T14:17:26.365532Z",
+  "generated": "2026-08-19T13:59:40.524827Z",
   "source": "Marveen job-hunter + igaming agent logs",
-  "count": 9,
+  "count": 10,
   "roles": [
+    {
+      "title": "3 csillag alatt maradtak: Betty Head of AML (Sofia, Bulgaria, AML-specialist, ne",
+      "market": "malta",
+      "roleCategory": "compliance",
+      "source": "job-hunter",
+      "date": "2026-08-18",
+      "snippet": "3 csillag alatt maradtak: Betty Head of AML (Sofia, Bulgaria, AML-specialist, nem ops/GM), Spielbankleitung Niedersachsen (nemet nyelv kell), Director Operational Excellence Malta (nem iGaming-igazolt"
+    },
     {
       "title": "- VBET Casino Manager Denmark: online-only, skip - B2Spin Head of VIP Gibraltar:",
       "market": "gibraltar",
@@ -138,6 +146,13 @@
       "name": "Fungies.io",
       "type": "operator",
       "career_url": "https://www.linkedin.com/company/fungies/jobs/",
+      "active": true
+    },
+    {
+      "id": 23,
+      "name": "L1",
+      "type": "operator",
+      "career_url": "https://l1.com/jobs?department=Operations/#job-listings",
       "active": true
     },
     {
