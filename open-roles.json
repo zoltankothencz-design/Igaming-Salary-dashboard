@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-19T13:59:40.524827Z",
+  "generated": "2026-08-19T14:00:46.642190Z",
   "source": "Marveen job-hunter + igaming agent logs",
   "count": 10,
   "roles": [
@@ -150,7 +150,7 @@
     },
     {
       "id": 23,
-      "name": "L1",
+      "name": "Legend",
       "type": "operator",
       "career_url": "https://l1.com/jobs?department=Operations/#job-listings",
       "active": true
