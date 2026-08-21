@@ -1,0 +1,54 @@
+name: Salary Data Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_playwright:
+        description: 'Run Playwright for JS-rendered sources'
+        required: false
+        default: 'true'
+  schedule:
+    # Weekly Monday 08:00 UTC (= 10:00 Budapest CEST)
+    - cron: '0 8 * * 1'
+
+concurrency:
+  group: salary-scan
+  cancel-in-progress: false  # Let a running scan finish; queue at most one
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install -r salary-scraper/requirements.txt
+
+      - name: Install Playwright browsers
+        if: ${{ github.event.inputs.use_playwright != 'false' }}
+        run: playwright install chromium --with-deps
+
+      - name: Run salary scraper
+        env:
+          USE_PLAYWRIGHT: ${{ github.event.inputs.use_playwright || 'true' }}
+        run: python salary-scraper/main.py
+
+      - name: Commit and push updated data
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add salary-data.json salary-signals.json last-sync.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update: salary data + FX $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

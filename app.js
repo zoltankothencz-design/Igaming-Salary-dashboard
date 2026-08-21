@@ -1,10 +1,18 @@
 /* app.js — Gibraltar iGaming Salary Dashboard 2026 */
 
+// === SCAN TRIGGER ===
+// Fine-Grained GitHub PAT with Actions:Write permission for this repo ONLY.
+// Worst-case risk if exposed: someone triggers extra scan runs (no data access).
+// Replace PLACEHOLDER with the actual token from GitHub Settings > Developer Settings > Fine-grained tokens.
+const SCAN_TRIGGER_TOKEN = 'PLACEHOLDER_GITHUB_FINE_GRAINED_PAT';
+const SCAN_REPO = 'zoltankothencz-design/Igaming-Salary-dashboard';
+const SCAN_WORKFLOW = 'salary-scan.yml';
+
 // === FX RATE ===
-// EUR to GBP conversion (ECB reference rate, 30 July 2026)
-const FX_EUR_GBP = 0.855;
-const FX_UPDATED = '30 July 2026';
-const FX_SOURCE = 'European Central Bank reference rate';
+// Fallback values — overridden on load from salary-data.json (auto-updated by GitHub Actions)
+let FX_EUR_GBP = 0.855;
+let FX_UPDATED = '30 July 2026';
+let FX_SOURCE = 'European Central Bank reference rate';
 
 // === TAX ESTIMATION CONFIG ===
 // Approximate effective rates — estimates only, individual circumstances vary.
@@ -1266,6 +1274,10 @@ function updateSliderDisplays() {
 
 // === UPDATE BUTTON ===
 function handleDataRefresh() {
+  triggerSalaryScan();
+}
+
+function _handleDataRefresh_LEGACY() {
   const btn = document.getElementById('btn-refresh-data');
   const status = document.getElementById('refresh-status');
 
@@ -1537,14 +1549,101 @@ function loadLastSyncBadge() {
       if (data && data.human) {
         badge.textContent = 'Updated ' + data.human;
         salaryData.lastUpdated = data.human;
+        if (data.signal_count !== undefined) {
+          const signalEl = document.getElementById('signal-count');
+          if (signalEl) signalEl.textContent = data.signal_count + ' signals';
+        }
       }
     })
     .catch(() => {});
 }
 
+function loadSalaryData() {
+  return fetch('salary-data.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) return;
+      // Override FX constants
+      if (data.fx) {
+        FX_EUR_GBP = data.fx.EUR_GBP || FX_EUR_GBP;
+        FX_UPDATED = data.fx.updated || FX_UPDATED;
+        FX_SOURCE = data.fx.source || FX_SOURCE;
+      }
+      // Deep-merge markets and operators into salaryData
+      if (data.markets) {
+        for (const [mkt, mktData] of Object.entries(data.markets)) {
+          if (salaryData.markets[mkt]) {
+            for (const [role, roleData] of Object.entries(mktData.roles || {})) {
+              if (salaryData.markets[mkt].roles[role]) {
+                for (const [lvl, lvlData] of Object.entries(roleData.levels || {})) {
+                  if (salaryData.markets[mkt].roles[role].levels[lvl]) {
+                    Object.assign(salaryData.markets[mkt].roles[role].levels[lvl], lvlData);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      if (data.meta && data.meta.lastUpdated) {
+        salaryData.lastUpdated = data.meta.lastUpdated;
+      }
+    })
+    .catch(() => {});
+}
+
+function triggerSalaryScan() {
+  const btn = document.getElementById('btn-refresh-data');
+  const status = document.getElementById('refresh-status');
+  const badge = document.getElementById('badge-last-updated');
+
+  if (SCAN_TRIGGER_TOKEN === 'PLACEHOLDER_GITHUB_FINE_GRAINED_PAT') {
+    status.textContent = 'Scan trigger not configured yet. Run manually: python salary-scraper/main.py';
+    return;
+  }
+
+  btn.classList.add('refreshing');
+  btn.disabled = true;
+  btn.textContent = 'Starting scan...';
+  status.textContent = 'Triggering background scan via GitHub Actions...';
+
+  fetch(
+    `https://api.github.com/repos/${SCAN_REPO}/actions/workflows/${SCAN_WORKFLOW}/dispatches`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SCAN_TRIGGER_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    }
+  )
+  .then(r => {
+    if (r.status === 204) {
+      status.textContent = 'Scan started in the background. Data will auto-update in ~5 minutes — reload the page then.';
+      badge.textContent = 'Scan running...';
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Scan queued`;
+    } else {
+      return r.text().then(t => { throw new Error(`GitHub API ${r.status}: ${t}`); });
+    }
+  })
+  .catch(err => {
+    status.textContent = 'Scan trigger failed: ' + err.message;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Check for updates`;
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.classList.remove('refreshing');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  initEventListeners();
-  renderAll();
-  loadOpenRoles();
-  loadLastSyncBadge();
+  loadSalaryData().then(() => {
+    initEventListeners();
+    renderAll();
+    loadOpenRoles();
+    loadLastSyncBadge();
+  });
 });
