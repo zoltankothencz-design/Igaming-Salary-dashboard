@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/trigger-scan.js": {
-      "runtime": "@vercel/node@4"
-    }
-  }
-}
