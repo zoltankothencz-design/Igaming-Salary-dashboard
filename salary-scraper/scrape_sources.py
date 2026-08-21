@@ -1,7 +1,7 @@
 """
 Scrapes publicly accessible iGaming salary sources.
 LinkedIn and Glassdoor are skipped (require login / heavy bot protection).
-Returns a list of signal dicts: {source, title, currency, min, max, role_hint, market_hint, scraped_at}
+Returns a list of signal dicts: {source, title, currency, min, max, role_hint, market_hint, operator_hint, scraped_at}
 """
 import re
 import time
@@ -25,6 +25,27 @@ SALARY_PATTERN = re.compile(
 )
 CURRENCY_HINT = re.compile(r"(£|GBP|\bgibraltar\b)", re.IGNORECASE)
 EUR_HINT = re.compile(r"(€|EUR|\bmalta\b)", re.IGNORECASE)
+
+# Maps career page domain/path fragments to operator keys in salary-data.json
+OPERATOR_URL_MAP = {
+    "jobs.ashbyhq.com/b2spin": "b2spin",
+    "betclicgroup.com": "betclic",
+    "careers.eeze.com": "eeze",
+    "finnplay.teamtailor.com": "finnplay",
+    "lottomart.com": "lottomart",
+    "hiring.over99.com": "over99",
+    "l1.com/jobs": "legend",
+    "entaincareers.com": "entain",
+    "betssongroup.com": "betsson",
+}
+
+
+def _get_operator_hint(url: str) -> str | None:
+    for fragment, key in OPERATOR_URL_MAP.items():
+        if fragment in url:
+            return key
+    return None
+
 
 ROLE_KEYWORDS = {
     "customerSupport": ["customer support", "customer service", "account advisor", "chat host", "player support"],
@@ -158,6 +179,7 @@ def _infer_role(text: str) -> str | None:
 def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> list[dict]:
     signals = []
     currency = _infer_currency(text, market_hint)
+    operator_hint = _get_operator_hint(url)
     lines = text.splitlines()
     for line in lines:
         matches = list(SALARY_PATTERN.finditer(line))
@@ -179,6 +201,7 @@ def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> 
                 "max": hi or lo,
                 "role_hint": role,
                 "market_hint": market_hint,
+                "operator_hint": operator_hint,
             })
     return signals
 

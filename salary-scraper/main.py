@@ -5,7 +5,9 @@ Runs in GitHub Actions, updates salary-data.json, salary-signals.json, last-sync
 """
 import json
 import os
+import statistics
 import sys
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -30,6 +32,49 @@ def save_json(path: Path, data: dict):
     print(f"[main] Written: {path.name}")
 
 
+def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
+    """Post-process scraped signals into per-operator salaryBands. Returns count of updated bands."""
+    groups = defaultdict(list)
+    for sig in signals:
+        op = sig.get("operator_hint")
+        market = sig.get("market_hint")
+        role = sig.get("role_hint")
+        if not op or not market or not role:
+            continue
+        market_key = "gibraltar" if market == "Gibraltar" else "malta"
+        groups[(op, market_key, role)].append(sig)
+
+    updated_ops = set()
+    for (op, market, role), sigs in groups.items():
+        if op not in salary_data.get("operators", {}):
+            continue
+        mids = [(s["min"] + s["max"]) // 2 for s in sigs]
+        if not mids:
+            continue
+        med = int(statistics.median(mids))
+        salary_data["operators"][op].setdefault("salaryBands", {}).setdefault(market, {})[role] = {
+            "mid": med,
+            "source": "scraped",
+            "signal_count": len(sigs),
+            "note": f"{len(sigs)} signal(s) from live scrape",
+        }
+        updated_ops.add(op)
+        print(f"[bands] {op}/{market}/{role}: mid={med} ({len(sigs)} signals)")
+
+    # Set dataStatus on all operators
+    for op_key, op_data in salary_data.get("operators", {}).items():
+        if op_data.get("dataStatus") == "no-public-data":
+            continue  # LinkedIn/login-gated -- never overwrite
+        bands = op_data.get("salaryBands", {})
+        has_data = any(bool(v) for v in bands.values()) if bands else False
+        if op_key in updated_ops:
+            op_data["dataStatus"] = "live"
+        elif not has_data and "dataStatus" not in op_data:
+            op_data["dataStatus"] = "no-salary-listed"
+
+    return len(updated_ops)
+
+
 def main():
     print(f"[main] Starting salary data update at {datetime.now(timezone.utc).isoformat()}")
 
@@ -52,7 +97,12 @@ def main():
     signals_path = REPO_ROOT / "salary-signals.json"
     save_json(signals_path, signals_data)
 
-    # 4. Write last-sync.json
+    # 4. Post-process signals into per-operator salaryBands
+    n_updated = update_operator_bands(salary_data, signals_data["signals"])
+    print(f"[main] Operator bands updated: {n_updated} operator(s)")
+    save_json(salary_path, salary_data)
+
+    # 5. Write last-sync.json
     tz_budapest_offset = "+02:00"  # CEST; adjust manually if needed during winter
     human_budapest = now_utc.strftime("%-d %B %Y, %H:%M")
     sync_path = REPO_ROOT / "last-sync.json"

@@ -803,14 +803,17 @@ function updateSliderSummary() {
 
 // === COMPARISON CARDS ===
 function _opAvgMidForRoles(op, market, roleKeys) {
-  // Prefer salaryBands; fall back to market avg × multiplier
+  // No fallback for operators with no usable public data
+  if (op.dataStatus === 'no-public-data' || op.dataStatus === 'no-salary-listed') return 0;
+  // Prefer live salaryBands
   const bands = op.salaryBands && op.salaryBands[market];
   if (bands) {
     const vals = roleKeys.map(r => bands[r] && bands[r].mid).filter(Boolean);
     if (vals.length) return vals.reduce((s, v) => s + v, 0) / vals.length;
   }
-  // Legacy multiplier fallback
+  // Seeded/multiplier fallback (entain/flutter/bet365 have explicit salaryBands already)
   const mult = (op.multipliers && op.multipliers[market]) || 1;
+  if (mult === 1 && (!op.salaryBands || !op.salaryBands[market])) return 0;
   const mktRoles = salaryData.markets[market].roles;
   let sum = 0, n = 0;
   roleKeys.forEach(roleKey => {
@@ -826,23 +829,26 @@ function renderComparisonCards() {
   const roleKeys = state.role === 'all' ? Object.keys(salaryData.markets[market].roles) : [state.role];
   const marketAvg = _marketAvgMid(market, state.role !== 'all' ? state.role : null);
 
-  const cards = Object.entries(salaryData.operators).map(([opKey, op]) => {
+  const withData = [], noData = [], noPublic = [];
+  Object.entries(salaryData.operators).forEach(([opKey, op]) => {
+    if (op.dataStatus === 'no-public-data') { noPublic.push({ opKey, op }); return; }
     const avgMid = _opAvgMidForRoles(op, market, roleKeys);
-    return { opKey, op, avgMid };
-  }).filter(({ avgMid }) => avgMid > 0)
-    .sort((a, b) => b.avgMid - a.avgMid);
+    if (avgMid > 0) withData.push({ opKey, op, avgMid });
+    else noData.push({ opKey, op });
+  });
+  withData.sort((a, b) => b.avgMid - a.avgMid);
 
-  cards.forEach(({ opKey, op, avgMid }) => {
+  withData.forEach(({ opKey, op, avgMid }) => {
     const comp = calcTotalComp(avgMid);
     const pct = Math.round((avgMid / marketAvg - 1) * 100);
     const badge = (pct >= 0 ? '+' : '') + pct + '% vs mkt avg';
-
+    const sourceLabel = op.dataStatus === 'live' ? 'Live data' : op.dataStatus === 'seeded' ? 'Est.' : '';
     const card = document.createElement('div');
     card.className = 'comparison-card';
     card.setAttribute('data-testid', 'comparison-card-' + opKey);
     card.innerHTML = `
       <div class="comparison-header">
-        <span class="comparison-operator-name">${op.label}</span>
+        <span class="comparison-operator-name">${op.label}${sourceLabel ? ' <small style="font-weight:400;opacity:.6">(' + sourceLabel + ')</small>' : ''}</span>
         <span class="comparison-multiplier">${badge}</span>
       </div>
       <div class="comparison-body">
@@ -871,7 +877,41 @@ function renderComparisonCards() {
     grid.appendChild(card);
   });
 
-  if (cards.length === 0) {
+  // Operators where scraper ran but found no salary figures
+  noData.forEach(({ opKey, op }) => {
+    const card = document.createElement('div');
+    card.className = 'comparison-card comparison-card--no-data';
+    card.setAttribute('data-testid', 'comparison-card-' + opKey);
+    card.innerHTML = `
+      <div class="comparison-header">
+        <span class="comparison-operator-name">${op.label}</span>
+        <span class="comparison-multiplier" style="background:var(--text-muted);color:#fff;opacity:.6">No salary listed</span>
+      </div>
+      <div class="comparison-body" style="opacity:.45;font-size:.85rem;padding:.75rem 1rem;">
+        Career page is public but no salary figures found. Run a new scan or check ${op.careerUrl ? '<a href="' + op.careerUrl + '" target="_blank" rel="noopener">career page</a>' : 'career page'} directly.
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Operators where public data is structurally unavailable (LinkedIn login required)
+  noPublic.forEach(({ opKey, op }) => {
+    const card = document.createElement('div');
+    card.className = 'comparison-card comparison-card--no-data';
+    card.setAttribute('data-testid', 'comparison-card-' + opKey);
+    card.innerHTML = `
+      <div class="comparison-header">
+        <span class="comparison-operator-name">${op.label}</span>
+        <span class="comparison-multiplier" style="background:#888;color:#fff;opacity:.55">Login required</span>
+      </div>
+      <div class="comparison-body" style="opacity:.4;font-size:.85rem;padding:.75rem 1rem;">
+        ${op.dataNote || 'Career data requires login (LinkedIn). Automatic scrape not possible.'}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if (withData.length === 0 && noData.length === 0 && noPublic.length === 0) {
     grid.innerHTML = '<p style="color:var(--text-muted);padding:1rem;">No operator data available for this filter yet. Run a salary scan to populate.</p>';
   }
 }

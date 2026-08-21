@@ -5,8 +5,8 @@
     "note": "Curated salary bands for Gibraltar and Malta iGaming market. Sources: Entain Gibraltar postings, Careers Gibraltar, Big Bet Jobs, IT Jobs Watch UK iGaming percentiles, Track360 salary report, Malta iGaming salary report 2026 (impjieg.work). Salary ranges are annual gross, in the market currency (GBP for Gibraltar, EUR for Malta)."
   },
   "fx": {
-    "EUR_GBP": 0.8567,
-    "updated": "21 August 2026",
+    "EUR_GBP": 0.855,
+    "updated": "30 July 2026",
     "source": "European Central Bank reference rate"
   },
   "markets": {
@@ -489,7 +489,8 @@
           "name": "Hybrid working — 4 office days",
           "verified": "confirmed"
         }
-      ]
+      ],
+      "dataStatus": "seeded"
     },
     "flutter": {
       "label": "Flutter Entertainment",
@@ -591,7 +592,8 @@
           "name": "Global mobility opportunities",
           "verified": "estimated"
         }
-      ]
+      ],
+      "dataStatus": "seeded"
     },
     "bet365": {
       "label": "Bet365",
@@ -689,7 +691,8 @@
           "name": "Career progression framework",
           "verified": "estimated"
         }
-      ]
+      ],
+      "dataStatus": "seeded"
     },
     "betsson": {
       "label": "Betsson",
@@ -699,7 +702,9 @@
     "leovegas": {
       "label": "LeoVegas",
       "careerUrl": "https://www.linkedin.com/company/leovegasgroup/jobs/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "betclic": {
       "label": "Betclic Group",
@@ -709,17 +714,23 @@
     "novibet": {
       "label": "Novibet",
       "careerUrl": "https://www.linkedin.com/jobs/search-results/?f_C=17960368",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "riskinc": {
       "label": "RISK inc",
       "careerUrl": "https://www.linkedin.com/jobs/search-results/?f_C=98672362",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "midnite": {
       "label": "Midnite",
       "careerUrl": "https://www.linkedin.com/jobs/search-results/?f_C=23525800",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "eeze": {
       "label": "Eeze",
@@ -754,22 +765,30 @@
     "anakatech": {
       "label": "Anakatech",
       "careerUrl": "https://www.linkedin.com/company/anakatech/jobs/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "stakemate": {
       "label": "Stakemate",
       "careerUrl": "https://www.linkedin.com/company/stakemate/jobs/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "evokeplc": {
       "label": "Evoke plc",
       "careerUrl": "https://www.linkedin.com/jobs/search-results/?f_C=102696781",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     },
     "exco": {
       "label": "Exco Game Studio",
       "careerUrl": "https://www.linkedin.com/company/excogg/jobs/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-public-data",
+      "dataNote": "Career page requires LinkedIn login; salary data unavailable via public scrape"
     }
   }
 }
