@@ -1,13 +1,5 @@
 /* app.js — Gibraltar iGaming Salary Dashboard 2026 */
 
-// === SCAN TRIGGER ===
-// Fine-Grained GitHub PAT with Actions:Write permission for this repo ONLY.
-// Worst-case risk if exposed: someone triggers extra scan runs (no data access).
-// Replace PLACEHOLDER with the actual token from GitHub Settings > Developer Settings > Fine-grained tokens.
-const SCAN_TRIGGER_TOKEN = 'PLACEHOLDER_GITHUB_FINE_GRAINED_PAT';
-const SCAN_REPO = 'zoltankothencz-design/Igaming-Salary-dashboard';
-const SCAN_WORKFLOW = 'salary-scan.yml';
-
 // === FX RATE ===
 // Fallback values — overridden on load from salary-data.json (auto-updated by GitHub Actions)
 let FX_EUR_GBP = 0.855;
@@ -1597,46 +1589,30 @@ function triggerSalaryScan() {
   const status = document.getElementById('refresh-status');
   const badge = document.getElementById('badge-last-updated');
 
-  if (SCAN_TRIGGER_TOKEN === 'PLACEHOLDER_GITHUB_FINE_GRAINED_PAT') {
-    status.textContent = 'Scan trigger not configured yet. Run manually: python salary-scraper/main.py';
-    return;
-  }
-
   btn.classList.add('refreshing');
   btn.disabled = true;
   btn.textContent = 'Starting scan...';
-  status.textContent = 'Triggering background scan via GitHub Actions...';
+  status.textContent = 'Triggering background scan...';
 
-  fetch(
-    `https://api.github.com/repos/${SCAN_REPO}/actions/workflows/${SCAN_WORKFLOW}/dispatches`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${SCAN_TRIGGER_TOKEN}`,
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ref: 'main' }),
-    }
-  )
-  .then(r => {
-    if (r.status === 204) {
-      status.textContent = 'Scan started in the background. Data will auto-update in ~5 minutes — reload the page then.';
-      badge.textContent = 'Scan running...';
-      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Scan queued`;
-    } else {
-      return r.text().then(t => { throw new Error(`GitHub API ${r.status}: ${t}`); });
-    }
-  })
-  .catch(err => {
-    status.textContent = 'Scan trigger failed: ' + err.message;
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Check for updates`;
-  })
-  .finally(() => {
-    btn.disabled = false;
-    btn.classList.remove('refreshing');
-  });
+  fetch('/api/trigger-scan', { method: 'POST' })
+    .then(r => r.json().then(body => ({ ok: r.ok, status: r.status, body })))
+    .then(({ ok, status: httpStatus, body }) => {
+      if (ok) {
+        status.textContent = 'Scan started in the background. Data will auto-update in ~5 minutes — reload the page then.';
+        badge.textContent = 'Scan running...';
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Scan queued`;
+      } else {
+        throw new Error(body.error || `HTTP ${httpStatus}`);
+      }
+    })
+    .catch(err => {
+      status.textContent = 'Scan trigger failed: ' + err.message;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg> Check for updates`;
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.classList.remove('refreshing');
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
