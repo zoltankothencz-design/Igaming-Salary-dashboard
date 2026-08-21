@@ -5,8 +5,8 @@
     "note": "Curated salary bands for Gibraltar and Malta iGaming market. Sources: Entain Gibraltar postings, Careers Gibraltar, Big Bet Jobs, IT Jobs Watch UK iGaming percentiles, Track360 salary report, Malta iGaming salary report 2026 (impjieg.work). Salary ranges are annual gross, in the market currency (GBP for Gibraltar, EUR for Malta)."
   },
   "fx": {
-    "EUR_GBP": 0.855,
-    "updated": "30 July 2026",
+    "EUR_GBP": 0.8567,
+    "updated": "21 August 2026",
     "source": "European Central Bank reference rate"
   },
   "markets": {
@@ -408,10 +408,6 @@
             "mid": 62750,
             "source": "seeded"
           },
-          "marketingAffiliate": {
-            "mid": 68600,
-            "source": "seeded"
-          },
           "crmVipOps": {
             "mid": 66200,
             "source": "seeded"
@@ -697,7 +693,8 @@
     "betsson": {
       "label": "Betsson",
       "careerUrl": "https://betssongroup.com/careers/available-jobs/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed"
     },
     "leovegas": {
       "label": "LeoVegas",
@@ -709,7 +706,17 @@
     "betclic": {
       "label": "Betclic Group",
       "careerUrl": "https://betclicgroup.com/en/people",
-      "salaryBands": {}
+      "salaryBands": {
+        "malta": {
+          "customerSupport": {
+            "mid": 39000,
+            "source": "scraped",
+            "signal_count": 11,
+            "note": "11 signal(s) from live scrape"
+          }
+        }
+      },
+      "dataStatus": "live"
     },
     "novibet": {
       "label": "Novibet",
@@ -735,32 +742,56 @@
     "eeze": {
       "label": "Eeze",
       "careerUrl": "https://careers.eeze.com/jobs",
-      "salaryBands": {}
+      "salaryBands": {
+        "gibraltar": {
+          "compliance": {
+            "mid": 28000,
+            "source": "scraped",
+            "signal_count": 2,
+            "note": "2 signal(s) from live scrape"
+          }
+        }
+      },
+      "dataStatus": "live"
     },
     "b2spin": {
       "label": "B2Spin",
       "careerUrl": "https://jobs.ashbyhq.com/b2spin",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed"
     },
     "legend": {
       "label": "Legend",
       "careerUrl": "https://l1.com/jobs?department=Operations/",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed"
     },
     "lottomart": {
       "label": "Lottomart",
       "careerUrl": "https://lottomart.com/en-gb/careers",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed"
     },
     "over99": {
       "label": "Over99.com",
       "careerUrl": "https://hiring.over99.com/jobs",
-      "salaryBands": {}
+      "salaryBands": {
+        "gibraltar": {
+          "director": {
+            "mid": 99000,
+            "source": "scraped",
+            "signal_count": 2,
+            "note": "2 signal(s) from live scrape"
+          }
+        }
+      },
+      "dataStatus": "live"
     },
     "finnplay": {
       "label": "Finnplay Technologies",
       "careerUrl": "https://finnplay.teamtailor.com/jobs",
-      "salaryBands": {}
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed"
     },
     "anakatech": {
       "label": "Anakatech",

@@ -32,6 +32,19 @@ def save_json(path: Path, data: dict):
     print(f"[main] Written: {path.name}")
 
 
+OPERATOR_DEFAULT_MARKET = {
+    "betsson": "malta",
+    "betclic": "malta",
+    "eeze": "gibraltar",
+    "b2spin": "gibraltar",
+    "legend": "gibraltar",
+    "lottomart": "gibraltar",
+    "over99": "gibraltar",
+    "finnplay": "malta",
+    "entain": "gibraltar",
+}
+
+
 def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
     """Post-process scraped signals into per-operator salaryBands. Returns count of updated bands."""
     groups = defaultdict(list)
@@ -39,32 +52,45 @@ def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
         op = sig.get("operator_hint")
         market = sig.get("market_hint")
         role = sig.get("role_hint")
-        if not op or not market or not role:
+        if not op or not role:
             continue
-        market_key = "gibraltar" if market == "Gibraltar" else "malta"
+        # Resolve market: explicit hint wins; fall back to operator default
+        if market:
+            market_key = "gibraltar" if market == "Gibraltar" else "malta"
+        elif op in OPERATOR_DEFAULT_MARKET:
+            market_key = OPERATOR_DEFAULT_MARKET[op]
+        else:
+            continue
         groups[(op, market_key, role)].append(sig)
 
     updated_ops = set()
     for (op, market, role), sigs in groups.items():
-        if op not in salary_data.get("operators", {}):
+        op_data = salary_data.get("operators", {}).get(op)
+        if not op_data:
             continue
-        mids = [(s["min"] + s["max"]) // 2 for s in sigs]
-        if not mids:
+        # Never overwrite manually seeded operators -- they have curated data
+        if op_data.get("dataStatus") == "seeded":
+            continue
+        # Filter implausible values (monthly noise, c-suite outliers)
+        mids = [(s["min"] + s["max"]) // 2 for s in sigs if 18000 <= (s["min"] + s["max"]) // 2 <= 250000]
+        # Require at least 2 signals for credibility
+        if len(mids) < 2:
             continue
         med = int(statistics.median(mids))
-        salary_data["operators"][op].setdefault("salaryBands", {}).setdefault(market, {})[role] = {
+        op_data.setdefault("salaryBands", {}).setdefault(market, {})[role] = {
             "mid": med,
             "source": "scraped",
-            "signal_count": len(sigs),
-            "note": f"{len(sigs)} signal(s) from live scrape",
+            "signal_count": len(mids),
+            "note": f"{len(mids)} signal(s) from live scrape",
         }
         updated_ops.add(op)
-        print(f"[bands] {op}/{market}/{role}: mid={med} ({len(sigs)} signals)")
+        print(f"[bands] {op}/{market}/{role}: mid={med} ({len(mids)} signals)")
 
-    # Set dataStatus on all operators
+    # Set dataStatus on all operators (never overwrite protected statuses)
+    PROTECTED = {"no-public-data", "seeded"}
     for op_key, op_data in salary_data.get("operators", {}).items():
-        if op_data.get("dataStatus") == "no-public-data":
-            continue  # LinkedIn/login-gated -- never overwrite
+        if op_data.get("dataStatus") in PROTECTED:
+            continue
         bands = op_data.get("salaryBands", {})
         has_data = any(bool(v) for v in bands.values()) if bands else False
         if op_key in updated_ops:
