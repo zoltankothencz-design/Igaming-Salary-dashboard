@@ -355,7 +355,25 @@ function convertToGBP(value, fromMarket) {
 
 function getOperatorMultiplier(market) {
   if (state.operator === 'all') return 1.0;
-  return salaryData.operators[state.operator].multipliers[market];
+  const op = salaryData.operators[state.operator];
+  if (!op) return 1.0;
+  // Prefer salaryBands-derived ratio over flat multiplier
+  const bands = op.salaryBands && op.salaryBands[market];
+  if (bands) {
+    const role = state.role !== 'all' ? state.role : null;
+    if (role && bands[role] && bands[role].mid) {
+      const mktMid = _marketAvgMid(market, role);
+      return mktMid > 0 ? bands[role].mid / mktMid : 1.0;
+    }
+    const vals = Object.values(bands).map(b => b.mid).filter(Boolean);
+    if (vals.length) {
+      const opAvg = vals.reduce((s, v) => s + v, 0) / vals.length;
+      const mktAvg = _marketAvgMid(market, null);
+      return mktAvg > 0 ? opAvg / mktAvg : 1.0;
+    }
+  }
+  if (op.multipliers && op.multipliers[market]) return op.multipliers[market];
+  return 1.0;
 }
 
 function getRoleLevelEntries(market, roleKey) {
@@ -385,7 +403,7 @@ function getFilteredEntries(market) {
   }
 
   if (state.operator !== 'all') {
-    const mult = salaryData.operators[state.operator].multipliers[mkt];
+    const mult = getOperatorMultiplier(mkt);
     entries = entries.map(e => ({
       ...e,
       min: Math.round(e.min * mult),
@@ -667,20 +685,64 @@ function updateKPIs() {
   const maxEntry = entries.reduce((a, b) => a.max > b.max ? a : b);
   document.getElementById('kpi-range-sub').textContent = minEntry.levelLabel + ' to ' + maxEntry.levelLabel;
 
-  const bestOperator = getBestOperator();
+  const bestOperator = getBestOperator(entries);
   document.getElementById('kpi-best').textContent = bestOperator.label;
-  document.getElementById('kpi-best-sub').textContent = '+' + Math.round((bestOperator.multiplier - 1) * 100) + '% vs market avg';
+  document.getElementById('kpi-best-sub').textContent = bestOperator.subLabel;
 }
 
-function getBestOperator() {
-  let best = { label: '\u2014', multiplier: 1 };
-  Object.entries(salaryData.operators).forEach(([key, op]) => {
-    const mult = op.multipliers[state.market];
-    if (mult > best.multiplier) {
-      best = { label: op.label, multiplier: mult };
+function _marketAvgMid(market, role) {
+  try {
+    const roles = salaryData.markets[market].roles;
+    if (role && role !== 'all' && roles[role]) {
+      const levels = Object.values(roles[role].levels);
+      return levels.reduce((s, l) => s + l.mid, 0) / levels.length;
+    }
+    // all roles: grand average
+    return Object.values(roles)
+      .flatMap(r => Object.values(r.levels).map(l => l.mid))
+      .reduce((s, v, _, a) => s + v / a.length, 0);
+  } catch (_) { return 0; }
+}
+
+function getBestOperator(filteredEntries) {
+  const market = state.market === 'compare' ? 'gibraltar' : state.market;
+  const role = state.role;
+  const marketAvg = _marketAvgMid(market, role) || 1;
+
+  let best = null;
+  let bestMid = -Infinity;
+
+  Object.entries(salaryData.operators).forEach(([, op]) => {
+    const bands = op.salaryBands;
+    if (!bands) return;
+
+    let mid = null;
+    const mktBands = bands[market] || {};
+
+    if (role && role !== 'all') {
+      // Role-specific: only use operators that have data for this exact role
+      if (mktBands[role] && mktBands[role].mid) {
+        mid = mktBands[role].mid;
+      }
+    } else {
+      // All roles: average over whatever roles the operator has data for
+      const vals = Object.values(mktBands).map(b => b.mid).filter(Boolean);
+      if (vals.length) mid = vals.reduce((s, v) => s + v, 0) / vals.length;
+    }
+
+    if (mid !== null && mid > bestMid) {
+      bestMid = mid;
+      best = { label: op.label, mid };
     }
   });
-  return best;
+
+  if (!best) return { label: '\u2014', subLabel: 'No data for this filter' };
+
+  const pct = Math.round((bestMid / marketAvg - 1) * 100);
+  const sign = pct >= 0 ? '+' : '';
+  const subLabel = sign + pct + '% vs market avg'
+    + (role && role !== 'all' ? ' (' + (salaryData.markets[market]?.roles[role]?.label || role) + ')' : '');
+  return { label: best.label, subLabel };
 }
 
 // === PERCENTILE CALC ===
@@ -740,38 +802,48 @@ function updateSliderSummary() {
 }
 
 // === COMPARISON CARDS ===
+function _opAvgMidForRoles(op, market, roleKeys) {
+  // Prefer salaryBands; fall back to market avg × multiplier
+  const bands = op.salaryBands && op.salaryBands[market];
+  if (bands) {
+    const vals = roleKeys.map(r => bands[r] && bands[r].mid).filter(Boolean);
+    if (vals.length) return vals.reduce((s, v) => s + v, 0) / vals.length;
+  }
+  // Legacy multiplier fallback
+  const mult = (op.multipliers && op.multipliers[market]) || 1;
+  const mktRoles = salaryData.markets[market].roles;
+  let sum = 0, n = 0;
+  roleKeys.forEach(roleKey => {
+    Object.values(mktRoles[roleKey].levels).forEach(l => { sum += l.mid * mult; n++; });
+  });
+  return n ? sum / n : 0;
+}
+
 function renderComparisonCards() {
   const grid = document.getElementById('comparison-grid');
   grid.innerHTML = '';
+  const market = state.market === 'compare' ? 'gibraltar' : state.market;
+  const roleKeys = state.role === 'all' ? Object.keys(salaryData.markets[market].roles) : [state.role];
+  const marketAvg = _marketAvgMid(market, state.role !== 'all' ? state.role : null);
 
-  Object.entries(salaryData.operators).forEach(([opKey, op]) => {
-    let roleKeys = state.role === 'all' ? Object.keys(getMarket().roles) : [state.role];
-    let avgMid = 0;
-    let count = 0;
+  const cards = Object.entries(salaryData.operators).map(([opKey, op]) => {
+    const avgMid = _opAvgMidForRoles(op, market, roleKeys);
+    return { opKey, op, avgMid };
+  }).filter(({ avgMid }) => avgMid > 0)
+    .sort((a, b) => b.avgMid - a.avgMid);
 
-    roleKeys.forEach(roleKey => {
-      const role = salaryData.markets[state.market].roles[roleKey];
-      Object.values(role.levels).forEach(level => {
-        avgMid += level.mid * op.multipliers[state.market];
-        count++;
-      });
-    });
-    avgMid = avgMid / count;
-
+  cards.forEach(({ opKey, op, avgMid }) => {
     const comp = calcTotalComp(avgMid);
+    const pct = Math.round((avgMid / marketAvg - 1) * 100);
+    const badge = (pct >= 0 ? '+' : '') + pct + '% vs mkt avg';
+
     const card = document.createElement('div');
     card.className = 'comparison-card';
     card.setAttribute('data-testid', 'comparison-card-' + opKey);
-
-    const mult = op.multipliers[state.market];
-    const multiplierBadge = mult >= 1
-      ? '+' + Math.round((mult - 1) * 100) + '% base'
-      : Math.round((mult - 1) * 100) + '% base';
-
     card.innerHTML = `
       <div class="comparison-header">
         <span class="comparison-operator-name">${op.label}</span>
-        <span class="comparison-multiplier">${multiplierBadge}</span>
+        <span class="comparison-multiplier">${badge}</span>
       </div>
       <div class="comparison-body">
         <div class="comparison-row">
@@ -798,6 +870,10 @@ function renderComparisonCards() {
     `;
     grid.appendChild(card);
   });
+
+  if (cards.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-muted);padding:1rem;">No operator data available for this filter yet. Run a salary scan to populate.</p>';
+  }
 }
 
 // === BENEFITS GRID ===
@@ -1561,7 +1637,7 @@ function loadSalaryData() {
         FX_UPDATED = data.fx.updated || FX_UPDATED;
         FX_SOURCE = data.fx.source || FX_SOURCE;
       }
-      // Deep-merge markets and operators into salaryData
+      // Deep-merge markets
       if (data.markets) {
         for (const [mkt, mktData] of Object.entries(data.markets)) {
           if (salaryData.markets[mkt]) {
@@ -1577,11 +1653,44 @@ function loadSalaryData() {
           }
         }
       }
+      // Merge operators: add new ones, update salaryBands on existing
+      if (data.operators) {
+        for (const [key, op] of Object.entries(data.operators)) {
+          if (!salaryData.operators[key]) {
+            salaryData.operators[key] = op;
+          } else {
+            if (op.salaryBands) salaryData.operators[key].salaryBands = op.salaryBands;
+            if (op.careerUrl) salaryData.operators[key].careerUrl = op.careerUrl;
+          }
+        }
+      }
       if (data.meta && data.meta.lastUpdated) {
         salaryData.lastUpdated = data.meta.lastUpdated;
       }
     })
     .catch(() => {});
+}
+
+function buildOperatorPills() {
+  ['operator-pills-main', 'operator-pills-compare'].forEach(containerId => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const isCompare = containerId.includes('compare');
+
+    // Remove previously generated pills (keep "All Operators" button)
+    container.querySelectorAll('[data-operator]:not([data-operator="all"])').forEach(b => b.remove());
+
+    Object.entries(salaryData.operators).forEach(([key, op]) => {
+      const btn = document.createElement('button');
+      btn.className = 'pill';
+      btn.setAttribute('data-operator', key);
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', 'false');
+      btn.setAttribute('data-testid', 'filter-operator-' + key + (isCompare ? '-compare' : ''));
+      btn.textContent = op.label;
+      container.appendChild(btn);
+    });
+  });
 }
 
 function triggerSalaryScan() {
@@ -1617,6 +1726,7 @@ function triggerSalaryScan() {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSalaryData().then(() => {
+    buildOperatorPills();
     initEventListeners();
     renderAll();
     loadOpenRoles();

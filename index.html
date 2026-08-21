@@ -82,11 +82,9 @@
       <section class="filters-section hide-in-compare" aria-label="Dashboard filters">
         <div class="filter-group">
           <span class="filter-label" id="operator-label">Operator</span>
-          <div class="filter-pills" role="radiogroup" aria-labelledby="operator-label">
+          <div class="filter-pills" role="radiogroup" aria-labelledby="operator-label" id="operator-pills-main">
             <button class="pill active" data-operator="all" role="radio" aria-checked="true" data-testid="filter-operator-all">All Operators</button>
-            <button class="pill" data-operator="entain" role="radio" aria-checked="false" data-testid="filter-operator-entain">Entain</button>
-            <button class="pill" data-operator="flutter" role="radio" aria-checked="false" data-testid="filter-operator-flutter">Flutter</button>
-            <button class="pill" data-operator="bet365" role="radio" aria-checked="false" data-testid="filter-operator-bet365">Bet365</button>
+            <!-- operator pills generated dynamically from salary-data.json -->
           </div>
         </div>
         <div class="filter-group">
@@ -119,11 +117,9 @@
         </div>
         <div class="filter-group">
           <span class="filter-label">Operator (for comparison)</span>
-          <div class="filter-pills" role="radiogroup">
+          <div class="filter-pills" role="radiogroup" id="operator-pills-compare">
             <button class="pill active" data-operator="all" role="radio" aria-checked="true" data-testid="filter-operator-all-compare">All Operators</button>
-            <button class="pill" data-operator="entain" role="radio" aria-checked="false" data-testid="filter-operator-entain-compare">Entain</button>
-            <button class="pill" data-operator="flutter" role="radio" aria-checked="false" data-testid="filter-operator-flutter-compare">Flutter</button>
-            <button class="pill" data-operator="bet365" role="radio" aria-checked="false" data-testid="filter-operator-bet365-compare">Bet365</button>
+            <!-- operator pills generated dynamically from salary-data.json -->
           </div>
         </div>
       </section>
