@@ -5,8 +5,8 @@
     "note": "Curated salary bands for Gibraltar and Malta iGaming market. Sources: Entain Gibraltar postings, Careers Gibraltar, Big Bet Jobs, IT Jobs Watch UK iGaming percentiles, Track360 salary report, Malta iGaming salary report 2026 (impjieg.work). Salary ranges are annual gross, in the market currency (GBP for Gibraltar, EUR for Malta)."
   },
   "fx": {
-    "EUR_GBP": 0.855,
-    "updated": "30 July 2026",
+    "EUR_GBP": 0.8567,
+    "updated": "21 August 2026",
     "source": "European Central Bank reference rate"
   },
   "markets": {
@@ -21,60 +21,180 @@
           "label": "Customer Support",
           "shortLabel": "Cust. Support",
           "levels": {
-            "entry":  { "label": "Entry-Level Agent",       "min": 22000, "mid": 25000, "max": 28000 },
-            "mid":    { "label": "Experienced Agent",       "min": 28000, "mid": 32000, "max": 36000 },
-            "senior": { "label": "Team Lead / Supervisor",  "min": 35000, "mid": 38500, "max": 42000 }
+            "entry": {
+              "label": "Entry-Level Agent",
+              "min": 22000,
+              "mid": 25000,
+              "max": 28000
+            },
+            "mid": {
+              "label": "Experienced Agent",
+              "min": 28000,
+              "mid": 32000,
+              "max": 36000
+            },
+            "senior": {
+              "label": "Team Lead / Supervisor",
+              "min": 35000,
+              "mid": 38500,
+              "max": 42000
+            }
           }
         },
         "productManager": {
           "label": "Product Manager",
           "shortLabel": "Product Mgr",
           "levels": {
-            "junior":   { "label": "Junior PM",             "min": 40000, "mid": 45000, "max": 50000 },
-            "mid":      { "label": "Product Manager",        "min": 50000, "mid": 57500, "max": 65000 },
-            "senior":   { "label": "Senior Product Manager", "min": 65000, "mid": 72500, "max": 80000 },
-            "director": { "label": "Product Director",       "min": 85000, "mid": 97500, "max": 110000 }
+            "junior": {
+              "label": "Junior PM",
+              "min": 40000,
+              "mid": 45000,
+              "max": 50000
+            },
+            "mid": {
+              "label": "Product Manager",
+              "min": 50000,
+              "mid": 57500,
+              "max": 65000
+            },
+            "senior": {
+              "label": "Senior Product Manager",
+              "min": 65000,
+              "mid": 72500,
+              "max": 80000
+            },
+            "director": {
+              "label": "Product Director",
+              "min": 85000,
+              "mid": 97500,
+              "max": 110000
+            }
           }
         },
         "compliance": {
           "label": "Compliance",
           "shortLabel": "Compliance",
           "levels": {
-            "officer":       { "label": "Compliance Officer",      "min": 30000, "mid": 36000, "max": 42000 },
-            "manager":       { "label": "Compliance Manager",      "min": 45000, "mid": 52500, "max": 60000 },
-            "seniorManager": { "label": "Senior Compliance Mgr",   "min": 60000, "mid": 67500, "max": 75000 },
-            "director":      { "label": "Compliance Director",     "min": 80000, "mid": 95000, "max": 110000 }
+            "officer": {
+              "label": "Compliance Officer",
+              "min": 30000,
+              "mid": 36000,
+              "max": 42000
+            },
+            "manager": {
+              "label": "Compliance Manager",
+              "min": 45000,
+              "mid": 52500,
+              "max": 60000
+            },
+            "seniorManager": {
+              "label": "Senior Compliance Mgr",
+              "min": 60000,
+              "mid": 67500,
+              "max": 75000
+            },
+            "director": {
+              "label": "Compliance Director",
+              "min": 80000,
+              "mid": 95000,
+              "max": 110000
+            }
           }
         },
         "marketingAffiliate": {
           "label": "Marketing & Affiliate",
           "shortLabel": "Marketing",
           "levels": {
-            "executive": { "label": "Marketing Executive",            "min": 24000, "mid": 30000, "max": 35000 },
-            "manager":   { "label": "Marketing / Affiliate Mgr",      "min": 42000, "mid": 50000, "max": 58000 },
-            "senior":    { "label": "Senior Affiliate Manager",       "min": 58000, "mid": 68000, "max": 78000 },
-            "head":      { "label": "Head of Marketing / Affiliates", "min": 75000, "mid": 85000, "max": 95000 },
-            "director":  { "label": "Marketing / Affiliate Director", "min": 95000, "mid": 110000, "max": 130000 }
+            "executive": {
+              "label": "Marketing Executive",
+              "min": 24000,
+              "mid": 30000,
+              "max": 35000
+            },
+            "manager": {
+              "label": "Marketing / Affiliate Mgr",
+              "min": 42000,
+              "mid": 50000,
+              "max": 58000
+            },
+            "senior": {
+              "label": "Senior Affiliate Manager",
+              "min": 58000,
+              "mid": 68000,
+              "max": 78000
+            },
+            "head": {
+              "label": "Head of Marketing / Affiliates",
+              "min": 75000,
+              "mid": 85000,
+              "max": 95000
+            },
+            "director": {
+              "label": "Marketing / Affiliate Director",
+              "min": 95000,
+              "mid": 110000,
+              "max": 130000
+            }
           }
         },
         "crmVipOps": {
           "label": "CRM, VIP & Operations",
           "shortLabel": "CRM/VIP/Ops",
           "levels": {
-            "coordinator": { "label": "Casino Coordinator / CRM Exec", "min": 26000, "mid": 31000,  "max": 36000  },
-            "vipManager":  { "label": "VIP Account Manager",            "min": 45000, "mid": 55000,  "max": 65000  },
-            "crmManager":  { "label": "CRM Manager / Vendor Mgmt Mgr",  "min": 50000, "mid": 60000,  "max": 70000  },
-            "seniorVip":   { "label": "Senior VIP Mgr / Head of CRM",   "min": 70000, "mid": 80000,  "max": 90000  },
-            "director":    { "label": "Director of CRM / VIP",          "min": 90000, "mid": 105000, "max": 120000 }
+            "coordinator": {
+              "label": "Casino Coordinator / CRM Exec",
+              "min": 26000,
+              "mid": 31000,
+              "max": 36000
+            },
+            "vipManager": {
+              "label": "VIP Account Manager",
+              "min": 45000,
+              "mid": 55000,
+              "max": 65000
+            },
+            "crmManager": {
+              "label": "CRM Manager / Vendor Mgmt Mgr",
+              "min": 50000,
+              "mid": 60000,
+              "max": 70000
+            },
+            "seniorVip": {
+              "label": "Senior VIP Mgr / Head of CRM",
+              "min": 70000,
+              "mid": 80000,
+              "max": 90000
+            },
+            "director": {
+              "label": "Director of CRM / VIP",
+              "min": 90000,
+              "mid": 105000,
+              "max": 120000
+            }
           }
         },
         "director": {
           "label": "Director / Executive",
           "shortLabel": "Director",
           "levels": {
-            "director":      { "label": "Director",       "min": 80000,  "mid": 90000,  "max": 100000 },
-            "seniorDirector": { "label": "Senior Director", "min": 100000, "mid": 110000, "max": 120000 },
-            "cLevel":        { "label": "C-Level / MD",   "min": 120000, "mid": 135000, "max": 150000 }
+            "director": {
+              "label": "Director",
+              "min": 80000,
+              "mid": 90000,
+              "max": 100000
+            },
+            "seniorDirector": {
+              "label": "Senior Director",
+              "min": 100000,
+              "mid": 110000,
+              "max": 120000
+            },
+            "cLevel": {
+              "label": "C-Level / MD",
+              "min": 120000,
+              "mid": 135000,
+              "max": 150000
+            }
           }
         }
       }
@@ -90,60 +210,180 @@
           "label": "Customer Support",
           "shortLabel": "Cust. Support",
           "levels": {
-            "entry":  { "label": "Entry-Level Agent",      "min": 18000, "mid": 21000, "max": 24000 },
-            "mid":    { "label": "Experienced Agent",      "min": 24000, "mid": 27000, "max": 30000 },
-            "senior": { "label": "Team Lead / Supervisor", "min": 28000, "mid": 30000, "max": 32000 }
+            "entry": {
+              "label": "Entry-Level Agent",
+              "min": 18000,
+              "mid": 21000,
+              "max": 24000
+            },
+            "mid": {
+              "label": "Experienced Agent",
+              "min": 24000,
+              "mid": 27000,
+              "max": 30000
+            },
+            "senior": {
+              "label": "Team Lead / Supervisor",
+              "min": 28000,
+              "mid": 30000,
+              "max": 32000
+            }
           }
         },
         "productManager": {
           "label": "Product Manager",
           "shortLabel": "Product Mgr",
           "levels": {
-            "junior":   { "label": "Junior PM",             "min": 40000, "mid": 45000, "max": 50000 },
-            "mid":      { "label": "Product Manager",        "min": 50000, "mid": 60000, "max": 70000 },
-            "senior":   { "label": "Senior Product Manager", "min": 70000, "mid": 80000, "max": 85000 },
-            "director": { "label": "Product Director",       "min": 85000, "mid": 87500, "max": 90000 }
+            "junior": {
+              "label": "Junior PM",
+              "min": 40000,
+              "mid": 45000,
+              "max": 50000
+            },
+            "mid": {
+              "label": "Product Manager",
+              "min": 50000,
+              "mid": 60000,
+              "max": 70000
+            },
+            "senior": {
+              "label": "Senior Product Manager",
+              "min": 70000,
+              "mid": 80000,
+              "max": 85000
+            },
+            "director": {
+              "label": "Product Director",
+              "min": 85000,
+              "mid": 87500,
+              "max": 90000
+            }
           }
         },
         "compliance": {
           "label": "Compliance",
           "shortLabel": "Compliance",
           "levels": {
-            "officer":       { "label": "Compliance Officer",     "min": 30000, "mid": 36000, "max": 42000 },
-            "manager":       { "label": "Compliance Manager",     "min": 42000, "mid": 48000, "max": 55000 },
-            "seniorManager": { "label": "Senior Compliance Mgr",  "min": 55000, "mid": 60000, "max": 65000 },
-            "director":      { "label": "Compliance Director",    "min": 65000, "mid": 70000, "max": 75000 }
+            "officer": {
+              "label": "Compliance Officer",
+              "min": 30000,
+              "mid": 36000,
+              "max": 42000
+            },
+            "manager": {
+              "label": "Compliance Manager",
+              "min": 42000,
+              "mid": 48000,
+              "max": 55000
+            },
+            "seniorManager": {
+              "label": "Senior Compliance Mgr",
+              "min": 55000,
+              "mid": 60000,
+              "max": 65000
+            },
+            "director": {
+              "label": "Compliance Director",
+              "min": 65000,
+              "mid": 70000,
+              "max": 75000
+            }
           }
         },
         "marketingAffiliate": {
           "label": "Marketing & Affiliate",
           "shortLabel": "Marketing",
           "levels": {
-            "executive": { "label": "Marketing Executive",            "min": 22000, "mid": 25000, "max": 28000 },
-            "manager":   { "label": "Marketing / Affiliate Mgr",      "min": 36000, "mid": 43000, "max": 50000 },
-            "senior":    { "label": "Senior Affiliate Manager",       "min": 50000, "mid": 57500, "max": 65000 },
-            "head":      { "label": "Head of Marketing / Affiliates", "min": 65000, "mid": 70000, "max": 75000 },
-            "director":  { "label": "Marketing / Affiliate Director", "min": 75000, "mid": 82500, "max": 90000 }
+            "executive": {
+              "label": "Marketing Executive",
+              "min": 22000,
+              "mid": 25000,
+              "max": 28000
+            },
+            "manager": {
+              "label": "Marketing / Affiliate Mgr",
+              "min": 36000,
+              "mid": 43000,
+              "max": 50000
+            },
+            "senior": {
+              "label": "Senior Affiliate Manager",
+              "min": 50000,
+              "mid": 57500,
+              "max": 65000
+            },
+            "head": {
+              "label": "Head of Marketing / Affiliates",
+              "min": 65000,
+              "mid": 70000,
+              "max": 75000
+            },
+            "director": {
+              "label": "Marketing / Affiliate Director",
+              "min": 75000,
+              "mid": 82500,
+              "max": 90000
+            }
           }
         },
         "crmVipOps": {
           "label": "CRM, VIP & Operations",
           "shortLabel": "CRM/VIP/Ops",
           "levels": {
-            "coordinator": { "label": "Casino Coordinator / CRM Exec", "min": 20000, "mid": 23000, "max": 26000 },
-            "vipManager":  { "label": "VIP Account Manager",            "min": 35000, "mid": 42500, "max": 50000 },
-            "crmManager":  { "label": "CRM Manager / Vendor Mgmt Mgr",  "min": 35000, "mid": 42500, "max": 55000 },
-            "seniorVip":   { "label": "Senior VIP Mgr / Head of CRM",   "min": 55000, "mid": 60000, "max": 65000 },
-            "director":    { "label": "Director of CRM / VIP",          "min": 65000, "mid": 72500, "max": 80000 }
+            "coordinator": {
+              "label": "Casino Coordinator / CRM Exec",
+              "min": 20000,
+              "mid": 23000,
+              "max": 26000
+            },
+            "vipManager": {
+              "label": "VIP Account Manager",
+              "min": 35000,
+              "mid": 42500,
+              "max": 50000
+            },
+            "crmManager": {
+              "label": "CRM Manager / Vendor Mgmt Mgr",
+              "min": 35000,
+              "mid": 42500,
+              "max": 55000
+            },
+            "seniorVip": {
+              "label": "Senior VIP Mgr / Head of CRM",
+              "min": 55000,
+              "mid": 60000,
+              "max": 65000
+            },
+            "director": {
+              "label": "Director of CRM / VIP",
+              "min": 65000,
+              "mid": 72500,
+              "max": 80000
+            }
           }
         },
         "director": {
           "label": "Director / Executive",
           "shortLabel": "Director",
           "levels": {
-            "director":       { "label": "Director",       "min": 65000, "mid": 72500, "max": 80000  },
-            "seniorDirector": { "label": "Senior Director", "min": 80000, "mid": 87500, "max": 95000  },
-            "cLevel":         { "label": "C-Level / MD",   "min": 95000, "mid": 107500,"max": 120000 }
+            "director": {
+              "label": "Director",
+              "min": 65000,
+              "mid": 72500,
+              "max": 80000
+            },
+            "seniorDirector": {
+              "label": "Senior Director",
+              "min": 80000,
+              "mid": 87500,
+              "max": 95000
+            },
+            "cLevel": {
+              "label": "C-Level / MD",
+              "min": 95000,
+              "mid": 107500,
+              "max": 120000
+            }
           }
         }
       }
@@ -155,33 +395,100 @@
       "careerUrl": "https://entaincareers.com/",
       "salaryBands": {
         "gibraltar": {
-          "customerSupport":    { "mid": 31800, "source": "seeded", "note": "market avg × 1.0" },
-          "productManager":     { "mid": 68000, "source": "seeded" },
-          "compliance":         { "mid": 62750, "source": "seeded" },
-          "marketingAffiliate": { "mid": 68600, "source": "seeded" },
-          "crmVipOps":          { "mid": 66200, "source": "seeded" },
-          "director":           { "mid": 111700, "source": "seeded" }
+          "customerSupport": {
+            "mid": 31800,
+            "source": "seeded",
+            "note": "market avg × 1.0"
+          },
+          "productManager": {
+            "mid": 68000,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 62750,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 68600,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 66200,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 111700,
+            "source": "seeded"
+          }
         },
         "malta": {
-          "customerSupport":    { "mid": 26000, "source": "seeded" },
-          "productManager":     { "mid": 68000, "source": "seeded" },
-          "compliance":         { "mid": 53500, "source": "seeded" },
-          "marketingAffiliate": { "mid": 55600, "source": "seeded" },
-          "crmVipOps":          { "mid": 48100, "source": "seeded" },
-          "director":           { "mid": 89200, "source": "seeded" }
+          "customerSupport": {
+            "mid": 26000,
+            "source": "seeded"
+          },
+          "productManager": {
+            "mid": 68000,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 53500,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 55600,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 48100,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 89200,
+            "source": "seeded"
+          }
         }
       },
       "benefits": [
-        { "name": "Group Bonus Plan", "verified": "confirmed" },
-        { "name": "ShareSave scheme (save-as-you-earn)", "verified": "confirmed" },
-        { "name": "Pension scheme — matched to 6%", "verified": "confirmed" },
-        { "name": "Private medical insurance", "verified": "confirmed" },
-        { "name": "Entain & Enhance — 2 paid development days", "verified": "confirmed" },
-        { "name": "Buy/sell holiday flexibility", "verified": "confirmed" },
-        { "name": "Unmind wellbeing app subscription", "verified": "confirmed" },
-        { "name": "Life assurance & income protection", "verified": "confirmed" },
-        { "name": "Extra \"It's Your Game\" day off", "verified": "confirmed" },
-        { "name": "Hybrid working — 4 office days", "verified": "confirmed" }
+        {
+          "name": "Group Bonus Plan",
+          "verified": "confirmed"
+        },
+        {
+          "name": "ShareSave scheme (save-as-you-earn)",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Pension scheme — matched to 6%",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Private medical insurance",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Entain & Enhance — 2 paid development days",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Buy/sell holiday flexibility",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Unmind wellbeing app subscription",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Life assurance & income protection",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Extra \"It's Your Game\" day off",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Hybrid working — 4 office days",
+          "verified": "confirmed"
+        }
       ]
     },
     "flutter": {
@@ -189,33 +496,101 @@
       "careerUrl": "https://flutter.com/careers",
       "salaryBands": {
         "gibraltar": {
-          "customerSupport":    { "mid": 34400, "source": "seeded", "note": "market avg × 1.08" },
-          "productManager":     { "mid": 73600, "source": "seeded" },
-          "compliance":         { "mid": 67800, "source": "seeded" },
-          "marketingAffiliate": { "mid": 74100, "source": "seeded" },
-          "crmVipOps":          { "mid": 71500, "source": "seeded" },
-          "director":           { "mid": 120600, "source": "seeded" }
+          "customerSupport": {
+            "mid": 34400,
+            "source": "seeded",
+            "note": "market avg × 1.08"
+          },
+          "productManager": {
+            "mid": 73600,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 67800,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 74100,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 71500,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 120600,
+            "source": "seeded"
+          }
         },
         "malta": {
-          "customerSupport":    { "mid": 27300, "source": "seeded", "note": "market avg × 1.05" },
-          "productManager":     { "mid": 71400, "source": "seeded" },
-          "compliance":         { "mid": 56200, "source": "seeded" },
-          "marketingAffiliate": { "mid": 58400, "source": "seeded" },
-          "crmVipOps":          { "mid": 50500, "source": "seeded" },
-          "director":           { "mid": 93700, "source": "seeded" }
+          "customerSupport": {
+            "mid": 27300,
+            "source": "seeded",
+            "note": "market avg × 1.05"
+          },
+          "productManager": {
+            "mid": 71400,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 56200,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 58400,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 50500,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 93700,
+            "source": "seeded"
+          }
         }
       },
       "benefits": [
-        { "name": "Annual bonus (10-20% target)", "verified": "typical" },
-        { "name": "Share options / RSUs", "verified": "typical" },
-        { "name": "Pension — 5-8% employer match", "verified": "typical" },
-        { "name": "Private health insurance", "verified": "typical" },
-        { "name": "Learning & development fund", "verified": "estimated" },
-        { "name": "25 days annual leave + buy/sell", "verified": "typical" },
-        { "name": "Wellbeing programme", "verified": "typical" },
-        { "name": "Life assurance", "verified": "typical" },
-        { "name": "Hybrid working model", "verified": "typical" },
-        { "name": "Global mobility opportunities", "verified": "estimated" }
+        {
+          "name": "Annual bonus (10-20% target)",
+          "verified": "typical"
+        },
+        {
+          "name": "Share options / RSUs",
+          "verified": "typical"
+        },
+        {
+          "name": "Pension — 5-8% employer match",
+          "verified": "typical"
+        },
+        {
+          "name": "Private health insurance",
+          "verified": "typical"
+        },
+        {
+          "name": "Learning & development fund",
+          "verified": "estimated"
+        },
+        {
+          "name": "25 days annual leave + buy/sell",
+          "verified": "typical"
+        },
+        {
+          "name": "Wellbeing programme",
+          "verified": "typical"
+        },
+        {
+          "name": "Life assurance",
+          "verified": "typical"
+        },
+        {
+          "name": "Hybrid working model",
+          "verified": "typical"
+        },
+        {
+          "name": "Global mobility opportunities",
+          "verified": "estimated"
+        }
       ]
     },
     "bet365": {
@@ -223,32 +598,97 @@
       "careerUrl": "https://www.bet365.com/en/about/careers",
       "salaryBands": {
         "gibraltar": {
-          "customerSupport":    { "mid": 30600, "source": "seeded", "note": "market avg × 0.96" },
-          "productManager":     { "mid": 65400, "source": "seeded" },
-          "compliance":         { "mid": 60200, "source": "seeded" },
-          "marketingAffiliate": { "mid": 65900, "source": "seeded" },
-          "crmVipOps":          { "mid": 63600, "source": "seeded" },
-          "director":           { "mid": 107200, "source": "seeded" }
+          "customerSupport": {
+            "mid": 30600,
+            "source": "seeded",
+            "note": "market avg × 0.96"
+          },
+          "productManager": {
+            "mid": 65400,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 60200,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 65900,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 63600,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 107200,
+            "source": "seeded"
+          }
         },
         "malta": {
-          "customerSupport":    { "mid": 24700, "source": "seeded", "note": "market avg × 0.95" },
-          "productManager":     { "mid": 64600, "source": "seeded" },
-          "compliance":         { "mid": 50800, "source": "seeded" },
-          "marketingAffiliate": { "mid": 52800, "source": "seeded" },
-          "crmVipOps":          { "mid": 45700, "source": "seeded" },
-          "director":           { "mid": 84700, "source": "seeded" }
+          "customerSupport": {
+            "mid": 24700,
+            "source": "seeded",
+            "note": "market avg × 0.95"
+          },
+          "productManager": {
+            "mid": 64600,
+            "source": "seeded"
+          },
+          "compliance": {
+            "mid": 50800,
+            "source": "seeded"
+          },
+          "marketingAffiliate": {
+            "mid": 52800,
+            "source": "seeded"
+          },
+          "crmVipOps": {
+            "mid": 45700,
+            "source": "seeded"
+          },
+          "director": {
+            "mid": 84700,
+            "source": "seeded"
+          }
         }
       },
       "benefits": [
-        { "name": "Rewarding bonus scheme", "verified": "confirmed" },
-        { "name": "No share scheme (private company)", "verified": "estimated" },
-        { "name": "Pension scheme", "verified": "typical" },
-        { "name": "Enhanced pay rates (shifts/weekends)", "verified": "confirmed" },
-        { "name": "Development pathways & training", "verified": "estimated" },
-        { "name": "Social & team events", "verified": "confirmed" },
-        { "name": "Competitive annual leave", "verified": "typical" },
-        { "name": "Life insurance", "verified": "estimated" },
-        { "name": "Career progression framework", "verified": "estimated" }
+        {
+          "name": "Rewarding bonus scheme",
+          "verified": "confirmed"
+        },
+        {
+          "name": "No share scheme (private company)",
+          "verified": "estimated"
+        },
+        {
+          "name": "Pension scheme",
+          "verified": "typical"
+        },
+        {
+          "name": "Enhanced pay rates (shifts/weekends)",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Development pathways & training",
+          "verified": "estimated"
+        },
+        {
+          "name": "Social & team events",
+          "verified": "confirmed"
+        },
+        {
+          "name": "Competitive annual leave",
+          "verified": "typical"
+        },
+        {
+          "name": "Life insurance",
+          "verified": "estimated"
+        },
+        {
+          "name": "Career progression framework",
+          "verified": "estimated"
+        }
       ]
     },
     "betsson": {
