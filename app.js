@@ -1275,11 +1275,18 @@ function handleDataRefresh() {
   status.textContent = 'Verifying local dataset against last collected sources...';
 
   setTimeout(() => {
-    salaryData.lastUpdated = new Date().toLocaleDateString('en-GB', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    });
+    // Re-fetch last-sync.json to show the real last data sync time (not "now")
+    fetch('last-sync.json?_=' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && data.human) {
+          salaryData.lastUpdated = data.human;
+          document.getElementById('badge-last-updated').textContent = 'Updated ' + data.human;
+        }
+      })
+      .catch(() => {});
 
-    // Calculate next Monday
+    // Calculate next Monday for status text
     const nextMon = new Date();
     const day = nextMon.getDay();
     const daysUntilMonday = day === 1 ? 7 : (8 - day) % 7;
@@ -1287,8 +1294,6 @@ function handleDataRefresh() {
     salaryData.nextScheduledUpdate = nextMon.toLocaleDateString('en-GB', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
-
-    document.getElementById('badge-last-updated').textContent = 'Updated ' + salaryData.lastUpdated;
 
     btn.classList.remove('refreshing');
     btn.disabled = false;
@@ -1524,8 +1529,22 @@ function initEventListeners() {
 }
 
 // === INIT ===
+function loadLastSyncBadge() {
+  const badge = document.getElementById('badge-last-updated');
+  fetch('last-sync.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.human) {
+        badge.textContent = 'Updated ' + data.human;
+        salaryData.lastUpdated = data.human;
+      }
+    })
+    .catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initEventListeners();
   renderAll();
   loadOpenRoles();
+  loadLastSyncBadge();
 });
