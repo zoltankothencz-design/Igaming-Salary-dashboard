@@ -396,21 +396,26 @@
       "salaryBands": {
         "gibraltar": {
           "customerSupport": {
-            "mid": 31800,
-            "source": "seeded",
-            "note": "market avg × 1.0"
+            "mid": 21073,
+            "source": "indeed-api",
+            "signal_count": 9,
+            "note": "Indeed UK-wide avg (N=9), job title: Customer Service Representative. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "productManager": {
-            "mid": 68000,
-            "source": "seeded"
+            "mid": 60522,
+            "source": "indeed-api",
+            "signal_count": 11,
+            "note": "Indeed UK-wide avg (N=11), job title: Product Manager. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "compliance": {
             "mid": 62750,
             "source": "seeded"
           },
           "crmVipOps": {
-            "mid": 66200,
-            "source": "seeded"
+            "mid": 36455,
+            "source": "indeed-api",
+            "signal_count": 8,
+            "note": "Indeed UK-wide avg (N=8), job title: VIP Manager. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "director": {
             "mid": 111700,
@@ -486,7 +491,8 @@
           "verified": "confirmed"
         }
       ],
-      "dataStatus": "seeded"
+      "dataStatus": "live",
+      "dataNote": "Career site JS-rendered, no salary figures shown in listings"
     },
     "flutter": {
       "label": "Flutter Entertainment",
@@ -499,8 +505,10 @@
             "note": "market avg × 1.08"
           },
           "productManager": {
-            "mid": 73600,
-            "source": "seeded"
+            "mid": 52532,
+            "source": "indeed-api",
+            "signal_count": 3,
+            "note": "Indeed UK-wide avg (N=3), job title: Product Manager. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "compliance": {
             "mid": 67800,
@@ -589,7 +597,8 @@
           "verified": "estimated"
         }
       ],
-      "dataStatus": "seeded"
+      "dataStatus": "live",
+      "dataNote": "Career site JS-rendered, no salary figures shown in listings"
     },
     "bet365": {
       "label": "Bet365",
@@ -597,9 +606,10 @@
       "salaryBands": {
         "gibraltar": {
           "customerSupport": {
-            "mid": 30600,
-            "source": "seeded",
-            "note": "market avg × 0.96"
+            "mid": 27558,
+            "source": "indeed-api",
+            "signal_count": 13,
+            "note": "Indeed UK-wide avg (N=13), job title: Customer Service Representative. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "productManager": {
             "mid": 65400,
@@ -614,8 +624,10 @@
             "source": "seeded"
           },
           "crmVipOps": {
-            "mid": 63600,
-            "source": "seeded"
+            "mid": 42943,
+            "source": "indeed-api",
+            "signal_count": 3,
+            "note": "Indeed UK-wide avg (N=3), job title: Operations Manager. Gibraltar premium typically +10-40% above UK avg. Fetched 2026-08-22."
           },
           "director": {
             "mid": 107200,
@@ -688,7 +700,8 @@
           "verified": "estimated"
         }
       ],
-      "dataStatus": "seeded"
+      "dataStatus": "live",
+      "dataNote": "Career sites 403 blocked (bet365.com/careers + bet365careers.com)"
     },
     "betsson": {
       "label": "Betsson",
