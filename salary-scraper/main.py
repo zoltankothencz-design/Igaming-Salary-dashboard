@@ -42,6 +42,8 @@ OPERATOR_DEFAULT_MARKET = {
     "over99": "gibraltar",
     "finnplay": "malta",
     "entain": "gibraltar",
+    "flutter": "gibraltar",
+    "bet365": "gibraltar",
 }
 
 
@@ -68,9 +70,6 @@ def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
         op_data = salary_data.get("operators", {}).get(op)
         if not op_data:
             continue
-        # Never overwrite manually seeded operators -- they have curated data
-        if op_data.get("dataStatus") == "seeded":
-            continue
         # Filter implausible values (monthly noise, c-suite outliers)
         mids = [(s["min"] + s["max"]) // 2 for s in sigs if 18000 <= (s["min"] + s["max"]) // 2 <= 250000]
         # Require at least 2 signals for credibility
@@ -86,13 +85,14 @@ def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
         updated_ops.add(op)
         print(f"[bands] {op}/{market}/{role}: mid={med} ({len(mids)} signals)")
 
-    # Set dataStatus on all operators (never overwrite protected statuses)
-    PROTECTED = {"no-public-data", "seeded"}
+    # Set dataStatus on all operators (never overwrite permanently-blocked operators)
+    # "seeded" is no longer protected -- real scraped data can upgrade it to "live"
+    PROTECTED = {"no-public-data"}
     for op_key, op_data in salary_data.get("operators", {}).items():
         if op_data.get("dataStatus") in PROTECTED:
             continue
         # Clear stale scraped bands when operator got 0 valid signals this run
-        # Prevents bad data from persisting across scrape cycles
+        # Note: only clears source=="scraped" bands; "seeded" bands are kept as fallback
         if op_key not in updated_ops:
             bands = op_data.get("salaryBands", {})
             for market_bands in bands.values():
@@ -101,11 +101,13 @@ def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
                     del market_bands[role]
                     print(f"[bands] {op_key}: cleared stale scraped band ({role})")
         bands = op_data.get("salaryBands", {})
+        # A band is "has data" if it has any role entry (scraped or seeded)
         has_data = any(bool(v) for v in bands.values()) if bands else False
         if op_key in updated_ops:
             op_data["dataStatus"] = "live"
         elif not has_data:
             op_data["dataStatus"] = "no-salary-listed"
+        # else: has seeded/fallback data but no new signals this run -- keep current dataStatus
 
     return len(updated_ops)
 

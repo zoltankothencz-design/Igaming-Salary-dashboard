@@ -37,6 +37,9 @@ OPERATOR_URL_MAP = {
     "l1.com/jobs": "legend",
     "entaincareers.com": "entain",
     "betssongroup.com": "betsson",
+    "flutter.com/careers": "flutter",
+    "flutter.com/find-a-career": "flutter",
+    "reveliolabs.com/flutter-entertainment": "flutter",
 }
 
 
@@ -91,7 +94,13 @@ STATIC_SOURCES = [
     ("https://lottomart.com/en-gb/careers", None),
     ("https://www.recruitgibraltar.com/jobsearchresults", "Gibraltar"),
     ("https://l1.com/jobs?department=Operations/", None),
-    ("https://entaincareers.com/", None),
+    # Additional iGaming salary surveys and industry reports
+    ("https://www.igamingnext.com/jobs/salary-guide/", None),
+    ("https://www.casinobeats.com/igaming-salary-guide/", None),
+    ("https://eworkforce.eu/igaming-salaries/", None),
+    # UK job boards with salary filters -- broader coverage
+    ("https://www.bettingjobs.com/marketing-affiliates/", None),
+    ("https://www.bettingjobs.com/management/", None),
     # FX / finance pages (for context)
     ("https://wise.com/gb/currency-converter/eur-to-gbp-rate?amount", None),
     ("https://www.poundsterlinglive.com/data/currencies/eur-pairs/EURGBP-exchange-rate", None),
@@ -117,6 +126,12 @@ JS_SOURCES = [
     ("https://finnplay.teamtailor.com/jobs", None),   # teamtailor
     ("https://hiring.over99.com/jobs", None),         # teamtailor-style
     ("https://fungies.io", None),
+    # Entain: JS-rendered teamtailor career site; static returns only cookie banner
+    ("https://entaincareers.com/job-search/?location=gibraltar", "Gibraltar"),
+    ("https://entaincareers.com/job-search/", None),
+    # Flutter: JS-rendered career site
+    ("https://flutter.com/careers", None),
+    ("https://www.reveliolabs.com/companies/flutter-entertainment/employees", None),
 ]
 
 # Explicitly skipped (login required or bot-protected -- reported in output)
@@ -138,6 +153,17 @@ SKIPPED_SOURCES = [
     ("https://www.morningstar.com/stocks/xnys/flut/quote", "paywall"),
     ("https://quick-offer.ru/job/middle-senior-game-designer-producer-81386", "likely inaccessible"),
     ("https://freemalta.com/hub/salary-benchmark?sector=igaming", "duplicate"),
+    # Bet365: both career URLs return 403 Forbidden -- no scrapable public salary data
+    ("https://www.bet365.com/en/about/careers", "403 forbidden"),
+    ("https://bet365careers.com", "403 forbidden"),
+    # Salary aggregators: login required or bot-protected
+    ("https://uk.indeed.com/cmp/Bet365/salaries", "login required"),
+    ("https://uk.indeed.com/cmp/Entain/salaries", "login required"),
+    ("https://uk.indeed.com/cmp/Flutter-Entertainment/salaries", "login required"),
+    ("https://www.glassdoor.co.uk/Salary/Entain-Salaries-E419254.htm", "login required"),
+    ("https://www.glassdoor.co.uk/Salary/Flutter-Entertainment-Salaries-E2196527.htm", "login required"),
+    ("https://www.payscale.com/research/GB/Employer=Bet365/Salary", "bot-protected"),
+    ("https://www.levels.fyi/companies/flutter-entertainment/salaries/", "404 not found"),
 ]
 
 
