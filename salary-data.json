@@ -1,12 +1,12 @@
 {
   "meta": {
-    "version": "2026-08-21",
-    "lastUpdated": "21 August 2026",
+    "version": "2026-08-22",
+    "lastUpdated": "22 August 2026",
     "note": "Curated salary bands for Gibraltar and Malta iGaming market. Sources: Entain Gibraltar postings, Careers Gibraltar, Big Bet Jobs, IT Jobs Watch UK iGaming percentiles, Track360 salary report, Malta iGaming salary report 2026 (impjieg.work). Salary ranges are annual gross, in the market currency (GBP for Gibraltar, EUR for Malta)."
   },
   "fx": {
     "EUR_GBP": 0.8567,
-    "updated": "21 August 2026",
+    "updated": "22 August 2026",
     "source": "European Central Bank reference rate"
   },
   "markets": {
@@ -706,17 +706,9 @@
     "betclic": {
       "label": "Betclic Group",
       "careerUrl": "https://betclicgroup.com/en/people",
-      "salaryBands": {
-        "malta": {
-          "customerSupport": {
-            "mid": 39000,
-            "source": "scraped",
-            "signal_count": 11,
-            "note": "11 signal(s) from live scrape"
-          }
-        }
-      },
-      "dataStatus": "live"
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed",
+      "dataNote": "Career page shows company culture content only; no salary figures found via scrape."
     },
     "novibet": {
       "label": "Novibet",
@@ -743,16 +735,9 @@
       "label": "Eeze",
       "careerUrl": "https://careers.eeze.com/jobs",
       "salaryBands": {
-        "gibraltar": {
-          "compliance": {
-            "mid": 28000,
-            "source": "scraped",
-            "signal_count": 2,
-            "note": "2 signal(s) from live scrape"
-          }
-        }
+        "gibraltar": {}
       },
-      "dataStatus": "live"
+      "dataStatus": "no-salary-listed"
     },
     "b2spin": {
       "label": "B2Spin",
@@ -775,17 +760,9 @@
     "over99": {
       "label": "Over99.com",
       "careerUrl": "https://hiring.over99.com/jobs",
-      "salaryBands": {
-        "gibraltar": {
-          "director": {
-            "mid": 99000,
-            "source": "scraped",
-            "signal_count": 2,
-            "note": "2 signal(s) from live scrape"
-          }
-        }
-      },
-      "dataStatus": "live"
+      "salaryBands": {},
+      "dataStatus": "no-salary-listed",
+      "dataNote": "Career page (hiring.over99.com) is JS-rendered; static scrape returned no salary data."
     },
     "finnplay": {
       "label": "Finnplay Technologies",

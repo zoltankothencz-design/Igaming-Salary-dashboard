@@ -87,12 +87,8 @@ STATIC_SOURCES = [
     ("https://www.jobmatchingpartner.com/jobs/8020317-finance-manager-igaming", None),
     ("https://3s.info/en/igaming-job/", None),
     # Company career pages (non-LinkedIn)
-    ("https://jobs.ashbyhq.com/b2spin", None),
     ("https://betclicgroup.com/en/people", None),
-    ("https://careers.eeze.com/jobs", None),
-    ("https://finnplay.teamtailor.com/jobs", None),
     ("https://lottomart.com/en-gb/careers", None),
-    ("https://hiring.over99.com/jobs", None),
     ("https://www.recruitgibraltar.com/jobsearchresults", "Gibraltar"),
     ("https://l1.com/jobs?department=Operations/", None),
     ("https://entaincareers.com/", None),
@@ -115,7 +111,11 @@ JS_SOURCES = [
     ("https://es.jooble.org/trabajo-marketing-ingles/Gibraltar", "Gibraltar"),
     ("https://startup.jobs/ai-director-igaming-idol-8781716", None),
     ("https://www.recruiter4you.com/jobs/8000747-aml-rg-specialist", None),
-    # Company JS-rendered pages
+    # Company JS-rendered pages (teamtailor + React career sites)
+    ("https://jobs.ashbyhq.com/b2spin", None),       # React app, requires JS
+    ("https://careers.eeze.com/jobs", None),          # teamtailor-based
+    ("https://finnplay.teamtailor.com/jobs", None),   # teamtailor
+    ("https://hiring.over99.com/jobs", None),         # teamtailor-style
     ("https://fungies.io", None),
 ]
 
@@ -176,14 +176,33 @@ def _infer_role(text: str) -> str | None:
     return None
 
 
+_CURRENCY_OR_K = re.compile(r"[£€]|GBP|EUR|[kK]\b", re.IGNORECASE)
+# Line-level check uses a tighter pattern: digit+k (salary shorthand) but not words like "Check", "risk"
+_CURRENCY_IN_LINE = re.compile(r"[£€]|GBP|EUR|\d[kK]\b", re.IGNORECASE)
+_SALARY_CONTEXT = re.compile(
+    r"\b(salary|salaire|remuneration|compensation|package|per\s*(?:year|annum)|annually|p\.?a\.?\b|wage|pay\s+range|earning)",
+    re.IGNORECASE,
+)
+
+
 def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> list[dict]:
     signals = []
     currency = _infer_currency(text, market_hint)
     operator_hint = _get_operator_hint(url)
     lines = text.splitlines()
     for line in lines:
+        has_currency_in_line = bool(_CURRENCY_IN_LINE.search(line))
         matches = list(SALARY_PATTERN.finditer(line))
         for m in matches:
+            raw1 = m.group(1).replace(",", "").replace(" ", "").strip()
+            # Bare small numbers (< 100) without explicit currency or k-suffix are noise
+            # e.g. "Over99" → "99" → would auto-scale to 99000 incorrectly
+            try:
+                raw_float = float(raw1)
+            except ValueError:
+                continue
+            if raw_float < 100 and not _CURRENCY_OR_K.search(m.group(0)):
+                continue
             lo = _parse_salary_value(m.group(1))
             hi = _parse_salary_value(m.group(2)) if m.group(2) else None
             if lo is None:
@@ -192,6 +211,11 @@ def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> 
                 lo, hi = hi, lo
             if lo < 8000:
                 continue  # monthly value or noise
+            # Large numbers without currency in the line must have explicit salary context
+            # e.g. "200,000 requests per month" is a business metric, not a salary
+            if lo >= 100000 and not has_currency_in_line:
+                if not _SALARY_CONTEXT.search(line):
+                    continue
             role = _infer_role(line)
             signals.append({
                 "source": url,

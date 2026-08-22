@@ -91,11 +91,20 @@ def update_operator_bands(salary_data: dict, signals: list[dict]) -> int:
     for op_key, op_data in salary_data.get("operators", {}).items():
         if op_data.get("dataStatus") in PROTECTED:
             continue
+        # Clear stale scraped bands when operator got 0 valid signals this run
+        # Prevents bad data from persisting across scrape cycles
+        if op_key not in updated_ops:
+            bands = op_data.get("salaryBands", {})
+            for market_bands in bands.values():
+                stale = [r for r, v in market_bands.items() if isinstance(v, dict) and v.get("source") == "scraped"]
+                for role in stale:
+                    del market_bands[role]
+                    print(f"[bands] {op_key}: cleared stale scraped band ({role})")
         bands = op_data.get("salaryBands", {})
         has_data = any(bool(v) for v in bands.values()) if bands else False
         if op_key in updated_ops:
             op_data["dataStatus"] = "live"
-        elif not has_data and "dataStatus" not in op_data:
+        elif not has_data:
             op_data["dataStatus"] = "no-salary-listed"
 
     return len(updated_ops)
