@@ -663,9 +663,21 @@ function renderTotalCompChart() {
 }
 
 // === KPI UPDATES ===
+function _opHasSalaryData(opKey, market) {
+  if (opKey === 'all') return true;
+  const op = salaryData.operators[opKey];
+  if (!op || !op.salaryBands) return false;
+  // Check if the operator has any salary band data for the relevant market(s)
+  const markets = market && market !== 'compare' ? [market] : ['gibraltar', 'malta'];
+  return markets.some(m => op.salaryBands[m] && Object.keys(op.salaryBands[m]).length > 0);
+}
+
 function updateKPIs() {
   const entries = getFilteredEntries();
   if (entries.length === 0) return;
+
+  const mkt = state.market === 'compare' ? 'gibraltar' : state.market;
+  const isEstimate = state.operator !== 'all' && !_opHasSalaryData(state.operator, mkt);
 
   const avgMid = entries.reduce((sum, e) => sum + e.mid, 0) / entries.length;
   const avgComp = calcTotalComp(avgMid);
@@ -677,13 +689,15 @@ function updateKPIs() {
 
   const roleLabel = state.role === 'all' ? 'All roles' : getMarket().roles[state.role].label;
   const opLabel = state.operator === 'all' ? 'all operators' : salaryData.operators[state.operator].label;
-  document.getElementById('kpi-avg-base-sub').textContent = roleLabel + ', ' + opLabel;
-  document.getElementById('kpi-avg-total-sub').textContent = roleLabel + ', ' + opLabel;
+  const estSuffix = isEstimate ? ' \u00b7 market estimate' : '';
+  document.getElementById('kpi-avg-base-sub').textContent = roleLabel + ', ' + opLabel + estSuffix;
+  document.getElementById('kpi-avg-total-sub').textContent = roleLabel + ', ' + opLabel + estSuffix;
 
   document.getElementById('kpi-range').textContent = formatMoneyk(allMin) + ' \u2013 ' + formatMoneyk(allMax);
   const minEntry = entries.reduce((a, b) => a.min < b.min ? a : b);
   const maxEntry = entries.reduce((a, b) => a.max > b.max ? a : b);
-  document.getElementById('kpi-range-sub').textContent = minEntry.levelLabel + ' to ' + maxEntry.levelLabel;
+  const rangeNote = isEstimate ? ' (market est.)' : '';
+  document.getElementById('kpi-range-sub').textContent = minEntry.levelLabel + ' to ' + maxEntry.levelLabel + rangeNote;
 
   const bestOperator = getBestOperator(entries);
   document.getElementById('kpi-best').textContent = bestOperator.label;
