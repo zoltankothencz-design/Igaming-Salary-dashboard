@@ -1795,6 +1795,300 @@ function triggerSalaryScan() {
     });
 }
 
+// === MALTA vs GIBRALTAR TAX COMPARISON ===
+
+function calcGibraltarGIBS(gross) {
+  let tax = 0;
+  if (gross <= 25000) {
+    tax += Math.min(gross, 10000) * 0.06;
+    tax += Math.max(0, Math.min(gross, 17000) - 10000) * 0.20;
+    tax += Math.max(0, gross - 17000) * 0.28;
+  } else {
+    tax += Math.min(gross, 17000) * 0.16;
+    tax += Math.max(0, Math.min(gross, 25000) - 17000) * 0.19;
+    tax += Math.max(0, Math.min(gross, 40000) - 25000) * 0.25;
+    tax += Math.max(0, Math.min(gross, 105000) - 40000) * 0.28;
+    tax += Math.max(0, gross - 105000) * 0.25;
+  }
+  return Math.round(tax);
+}
+
+function calcGibraltarABS(gross) {
+  const PA = 3455;
+  const taxable = Math.max(0, gross - PA);
+  let tax = 0;
+  tax += Math.min(taxable, 4000) * 0.14;
+  tax += Math.max(0, Math.min(taxable, 16000) - 4000) * 0.17;
+  tax += Math.max(0, taxable - 16000) * 0.39;
+  return Math.round(tax);
+}
+
+function calcGibraltarSIEmployee(gross) {
+  return Math.min(Math.round(gross * 0.10), Math.round(40.79 * 52));
+}
+
+function calcGibraltarSIEmployer(gross) {
+  return Math.min(Math.round(gross * 0.20), Math.round(81.58 * 52));
+}
+
+function calcMaltaIncomeTax(gross, status) {
+  const schedules = {
+    single:  [{to:12000,r:0},{to:16000,r:0.15},{to:60000,r:0.25},{to:Infinity,r:0.35}],
+    married: [{to:15000,r:0},{to:23000,r:0.15},{to:60000,r:0.25},{to:Infinity,r:0.35}],
+    parent:  [{to:13000,r:0},{to:17500,r:0.15},{to:60000,r:0.25},{to:Infinity,r:0.35}]
+  };
+  const brackets = schedules[status] || schedules.single;
+  let tax = 0, prev = 0;
+  for (const b of brackets) {
+    if (gross <= prev) break;
+    const top = b.to === Infinity ? gross : Math.min(gross, b.to);
+    tax += (top - prev) * b.r;
+    prev = b.to === Infinity ? gross : b.to;
+  }
+  return Math.round(tax);
+}
+
+function calcMaltaSSCEmployee(gross) {
+  const annualWageCap = Math.round(464.17 * 52);
+  return Math.round(Math.min(gross, annualWageCap) * 0.10);
+}
+
+function calcMaltaSSCEmployer(gross) {
+  return calcMaltaSSCEmployee(gross);
+}
+
+function _taxFmt(n) {
+  return Math.round(n).toLocaleString('en-GB');
+}
+
+function renderTaxSection() {
+  const fxEl = document.getElementById('tax-fx-rate');
+  if (fxEl) fxEl.textContent = FX_EUR_GBP.toFixed(3);
+  const fxSrc = document.getElementById('tax-fx-source');
+  if (fxSrc) fxSrc.textContent = FX_SOURCE || 'ECB';
+
+  _renderTaxOverview();
+  _renderTaxBrackets();
+  _renderTaxSpecialSchemes();
+  _renderNetSalaryEstimator();
+  _renderEmployerCost();
+}
+
+function _renderTaxOverview() {
+  const el = document.getElementById('tax-overview-grid');
+  if (!el) return;
+  const rows = [
+    ['Tax System',            'Progressive, 4 brackets (0–35%)',                          'GIBS or ABS — taxpayer uses whichever is lower'],
+    ['Zero-Rate Threshold',   '€12,000 single / €15,000 married',                         'N/A for GIBS; £3,455 personal allowance under ABS'],
+    ['Top Marginal Rate',     '35% (above €60,000)',                                       '28% (£40k–£105k) / 25% above £105k (GIBS Schedule B)'],
+    ['Employee Social Ins.',  '10% weekly wage, cap ~€2,414/yr',                           '10% weekly wage, cap ~£2,121/yr'],
+    ['Special Regime',        'HQP: 15% flat on gross (min €65k, MGA role)',               'HEPSS: £39,940 fixed (beneficial at £154k+ only)'],
+    ['Corporate Tax',         '35% / ~5% effective (imputation refund)',                   '15% (since July 2024)'],
+    ['Currency',              'EUR (€)',                                                    'GBP (£)'],
+  ];
+  el.innerHTML = `<table class="tax-overview-table">
+    <thead><tr><th></th><th>🇲🇹 Malta</th><th>🇬🇮 Gibraltar</th></tr></thead>
+    <tbody>${rows.map(r => `<tr><td class="tax-dim-cell">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function _renderTaxBrackets() {
+  const el = document.getElementById('tax-brackets-grid');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="tax-brackets-wrapper">
+      <div class="tax-bracket-card">
+        <div class="tax-bracket-card-title">🇲🇹 Malta — Income Tax Brackets 2026</div>
+        <table class="tax-bracket-table">
+          <thead><tr><th>Income (EUR)</th><th>Single</th><th>Married</th><th>Parent</th></tr></thead>
+          <tbody>
+            <tr><td>€0 – €12,000</td><td class="rate-zero">0%</td><td class="rate-zero" rowspan="2">€0 – €15,000: 0%</td><td class="rate-zero" rowspan="2">€0 – €13,000: 0%</td></tr>
+            <tr><td>€12,001 – €16,000</td><td class="rate-low">15%</td></tr>
+            <tr><td>€16,001 – €23,000</td><td class="rate-mid">25%</td><td class="rate-low">€15,001 – €23,000: 15%</td><td class="rate-low">€13,001 – €17,500: 15%</td></tr>
+            <tr><td>€23,001 – €60,000</td><td class="rate-mid">25%</td><td class="rate-mid">€23,001 – €60,000: 25%</td><td class="rate-mid">€17,501 – €60,000: 25%</td></tr>
+            <tr><td>€60,001+</td><td class="rate-high">35%</td><td class="rate-high">35%</td><td class="rate-high">35%</td></tr>
+          </tbody>
+        </table>
+        <div class="tax-bracket-note">SSC (employee): 10% of weekly wage, max ~€2,414/yr. Employer SSC: also 10%, same cap.</div>
+      </div>
+      <div class="tax-bracket-card">
+        <div class="tax-bracket-card-title">🇬🇮 Gibraltar — GIBS 2025/26</div>
+        <table class="tax-bracket-table">
+          <thead><tr><th>Income (GBP)</th><th>Rate</th><th>Schedule</th></tr></thead>
+          <tbody>
+            <tr><td>£0 – £10,000</td><td class="rate-zero">6%</td><td class="schedule-label" rowspan="3">Schedule A<br><small>(income ≤ £25k)</small></td></tr>
+            <tr><td>£10,001 – £17,000</td><td class="rate-mid">20%</td></tr>
+            <tr><td>£17,001 – £25,000</td><td class="rate-high">28%</td></tr>
+            <tr><td>£0 – £17,000</td><td class="rate-low">16%</td><td class="schedule-label" rowspan="5">Schedule B<br><small>(income > £25k)</small></td></tr>
+            <tr><td>£17,001 – £25,000</td><td class="rate-low">19%</td></tr>
+            <tr><td>£25,001 – £40,000</td><td class="rate-mid">25%</td></tr>
+            <tr><td>£40,001 – £105,000</td><td class="rate-high">28%</td></tr>
+            <tr><td>£105,001+</td><td class="rate-mid">25%</td></tr>
+          </tbody>
+        </table>
+        <div class="tax-bracket-note">ABS alternative: 14%/17%/39% after £3,455 personal allowance. System compares both and uses the lower result. SI (employee): 10%, max ~£2,121/yr. No married bracket under GIBS.</div>
+      </div>
+    </div>`;
+}
+
+function _renderTaxSpecialSchemes() {
+  const el = document.getElementById('tax-special-schemes');
+  if (!el) return;
+  el.innerHTML = `
+    <h3 class="tax-subsection-title">Special Tax Schemes</h3>
+    <div class="tax-schemes-grid">
+      <div class="tax-scheme-card">
+        <div class="tax-scheme-header"><span class="tax-scheme-flag">🇲🇹</span><span class="tax-scheme-name">HQP — Highly Qualified Persons (Malta)</span></div>
+        <ul class="tax-scheme-facts">
+          <li><strong>15% flat rate</strong> on gross annual salary (replaces standard income tax)</li>
+          <li>Minimum qualifying salary: <strong>€65,000/year</strong></li>
+          <li>Eligible roles: senior positions at MGA-licensed operators (C-level, Heads of Department, senior management)</li>
+          <li>Duration: up to 5+5+5 years, valid until 2040 (Legal Notice L.N. 20 of 2026)</li>
+          <li>Applies to locally-sourced employment income; foreign-source income rules differ</li>
+          <li>Employee SSC still applies on top of the 15% rate</li>
+          <li>Break-even vs standard single rate: ~€50,000 gross</li>
+        </ul>
+      </div>
+      <div class="tax-scheme-card">
+        <div class="tax-scheme-header"><span class="tax-scheme-flag">🇬🇮</span><span class="tax-scheme-name">HEPSS — High Executive Possessing Specialist Skills (Gibraltar)</span></div>
+        <ul class="tax-scheme-facts">
+          <li><strong>Fixed annual tax: £39,940</strong> on assessed income up to £160,000</li>
+          <li>Income above £160,000 assessed: 0% additional income tax</li>
+          <li>Eligible: senior executives with specialist skills (CEO, CFO, CTO and equivalent)</li>
+          <li>No stated minimum salary, but tax is only beneficial at <strong>~£154,000+ gross</strong> (below this, GIBS is cheaper)</li>
+          <li>SI (social insurance) applies separately and is not replaced by HEPSS</li>
+          <li>Requires application and approval — not automatic</li>
+        </ul>
+      </div>
+    </div>`;
+}
+
+function _renderNetSalaryEstimator() {
+  const el = document.getElementById('tax-scenario-estimator');
+  if (!el) return;
+
+  const levels = [
+    {label: 'Junior–Mid',           malta: 35000,  gib: 30000},
+    {label: 'Senior',               malta: 65000,  gib: 55500},
+    {label: 'Director / Specialist',malta: 100000, gib: 85500}
+  ];
+  const scenarios = [
+    {id: 'A', label: 'Single, standard',  desc: 'Standard PAYE, single filing status, no special scheme'},
+    {id: 'B', label: 'Married / parent',  desc: 'Malta: married or parent filing status. Gibraltar: standard GIBS (no married bracket)'},
+    {id: 'C', label: 'Special scheme',    desc: 'Malta HQP (≥€65k, MGA role) / Gibraltar HEPSS (senior exec, beneficial at £154k+ only)'}
+  ];
+
+  let html = `<div class="tax-est-table-wrap"><table class="tax-est-table">
+    <thead>
+      <tr>
+        <th class="tax-est-th-level">Salary Level</th>
+        ${scenarios.map(s => `<th class="tax-est-th-scenario"><div class="tax-est-sc-name">${s.label}</div><div class="tax-est-sc-desc">${s.desc}</div></th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>`;
+
+  for (const lv of levels) {
+    html += `<tr>
+      <td class="tax-est-td-level"><strong>${lv.label}</strong><div class="tax-est-gross">Malta €${_taxFmt(lv.malta)}<br>Gib £${_taxFmt(lv.gib)}</div></td>`;
+
+    for (const sc of scenarios) {
+      const m = _calcMaltaCell(lv.malta, sc.id);
+      const g = _calcGibCell(lv.gib, sc.id);
+      html += `<td class="tax-est-td-cell">
+        <div class="tax-est-juris tax-est-malta">
+          <span class="tax-est-flag-sm">🇲🇹</span>
+          <div class="tax-est-net-val">€${_taxFmt(m.net)}<span class="tax-est-eff">${m.eff}%</span></div>
+          <div class="tax-est-breakdown">Tax €${_taxFmt(m.tax)} · SSC €${_taxFmt(m.ssc)}</div>
+          ${m.tag ? `<div class="tax-est-tag">${m.tag}</div>` : ''}
+        </div>
+        <div class="tax-est-sep"></div>
+        <div class="tax-est-juris tax-est-gib">
+          <span class="tax-est-flag-sm">🇬🇮</span>
+          <div class="tax-est-net-val">£${_taxFmt(g.net)}<span class="tax-est-eff">${g.eff}%</span></div>
+          <div class="tax-est-breakdown">Tax £${_taxFmt(g.tax)} · SI £${_taxFmt(g.si)}</div>
+          ${g.tag ? `<div class="tax-est-tag tax-est-tag-note">${g.tag}</div>` : ''}
+        </div>
+      </td>`;
+    }
+    html += `</tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+  el.innerHTML = html;
+}
+
+function _calcMaltaCell(gross, scenario) {
+  let tax, tag = '';
+  const ssc = calcMaltaSSCEmployee(gross);
+  if (scenario === 'C') {
+    if (gross >= 65000) {
+      tax = Math.round(gross * 0.15);
+      tag = 'HQP: 15% flat';
+    } else {
+      tax = calcMaltaIncomeTax(gross, 'single');
+      tag = 'HQP: N/A (< €65k)';
+    }
+  } else if (scenario === 'B') {
+    tax = calcMaltaIncomeTax(gross, 'married');
+  } else {
+    tax = calcMaltaIncomeTax(gross, 'single');
+  }
+  const net = gross - tax - ssc;
+  const eff = ((tax + ssc) / gross * 100).toFixed(1);
+  return {tax, ssc, net: Math.round(net), eff, tag};
+}
+
+function _calcGibCell(gross, scenario) {
+  const gibsTax = calcGibraltarGIBS(gross);
+  const absTax = calcGibraltarABS(gross);
+  const tax = Math.min(gibsTax, absTax);
+  const si = calcGibraltarSIEmployee(gross);
+  let tag = '';
+  if (scenario === 'B') tag = 'No married bracket in GIBS';
+  if (scenario === 'C') tag = 'HEPSS N/A below ~£154k';
+  const net = gross - tax - si;
+  const eff = ((tax + si) / gross * 100).toFixed(1);
+  return {tax, si, net: Math.round(net), eff, tag};
+}
+
+function _renderEmployerCost() {
+  const el = document.getElementById('tax-employer-cost');
+  if (!el) return;
+  const levels = [
+    {label: 'Junior–Mid',           malta: 35000,  gib: 30000},
+    {label: 'Senior',               malta: 65000,  gib: 55500},
+    {label: 'Director / Specialist',malta: 100000, gib: 85500}
+  ];
+  let html = `<div class="tax-est-table-wrap"><table class="tax-employer-table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>🇲🇹 Malta Gross</th><th>+ Employer SSC</th><th>Malta Total Cost</th>
+        <th>🇬🇮 Gibraltar Gross</th><th>+ Employer SI (est.)</th><th>Gibraltar Total Cost</th>
+      </tr>
+    </thead>
+    <tbody>`;
+  for (const lv of levels) {
+    const mSSC = calcMaltaSSCEmployer(lv.malta);
+    const mTotal = lv.malta + mSSC;
+    const gSI = calcGibraltarSIEmployer(lv.gib);
+    const gTotal = lv.gib + gSI;
+    html += `<tr>
+      <td><strong>${lv.label}</strong></td>
+      <td>€${_taxFmt(lv.malta)}</td>
+      <td>€${_taxFmt(mSSC)} <small>(10%, capped)</small></td>
+      <td class="tax-total-col">€${_taxFmt(mTotal)}</td>
+      <td>£${_taxFmt(lv.gib)}</td>
+      <td>~£${_taxFmt(gSI)} <small>(est. ~20%)</small></td>
+      <td class="tax-total-col">~£${_taxFmt(gTotal)}</td>
+    </tr>`;
+  }
+  html += `</tbody>
+    <tfoot><tr><td colspan="7" class="tax-table-foot">Gibraltar employer SI rate is approximate — verify current rate with Gibraltar Social Insurance Office. Malta SSC: Class 1 employed, weekly contribution structure (employee + employer each ~10%).</td></tr></tfoot>
+  </table></div>`;
+  el.innerHTML = html;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadSalaryData().then(() => {
     buildOperatorPills();
@@ -1802,5 +2096,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAll();
     loadOpenRoles();
     loadLastSyncBadge();
+    renderTaxSection();
   });
 });
