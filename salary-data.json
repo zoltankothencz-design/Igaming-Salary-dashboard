@@ -1,12 +1,12 @@
 {
   "meta": {
-    "version": "2026-08-22",
-    "lastUpdated": "22 August 2026",
+    "version": "2026-08-23",
+    "lastUpdated": "23 August 2026",
     "note": "Curated salary bands for Gibraltar and Malta iGaming market. Sources: Entain Gibraltar postings, Careers Gibraltar, Big Bet Jobs, IT Jobs Watch UK iGaming percentiles, Track360 salary report, Malta iGaming salary report 2026 (impjieg.work). Salary ranges are annual gross, in the market currency (GBP for Gibraltar, EUR for Malta)."
   },
   "fx": {
     "EUR_GBP": 0.8567,
-    "updated": "22 August 2026",
+    "updated": "23 August 2026",
     "source": "European Central Bank reference rate"
   },
   "markets": {
@@ -196,16 +196,35 @@
               "max": 150000
             }
           }
-        }
-        ,
+        },
         "technology": {
           "label": "Technology & Engineering",
           "shortLabel": "Tech/Eng",
           "levels": {
-            "junior":    { "label": "Junior Developer / Engineer",   "min": 28000, "mid": 34000, "max": 42000 },
-            "mid":       { "label": "Mid-Level Engineer",            "min": 42000, "mid": 55000, "max": 65000 },
-            "senior":    { "label": "Senior Engineer / Tech Lead",   "min": 65000, "mid": 77500, "max": 90000 },
-            "principal": { "label": "Principal / Staff Engineer",    "min": 90000, "mid": 105000, "max": 120000 }
+            "junior": {
+              "label": "Junior Developer / Engineer",
+              "min": 28000,
+              "mid": 34000,
+              "max": 42000
+            },
+            "mid": {
+              "label": "Mid-Level Engineer",
+              "min": 42000,
+              "mid": 55000,
+              "max": 65000
+            },
+            "senior": {
+              "label": "Senior Engineer / Tech Lead",
+              "min": 65000,
+              "mid": 77500,
+              "max": 90000
+            },
+            "principal": {
+              "label": "Principal / Staff Engineer",
+              "min": 90000,
+              "mid": 105000,
+              "max": 120000
+            }
           }
         }
       },
@@ -411,10 +430,30 @@
           "label": "Technology & Engineering",
           "shortLabel": "Tech/Eng",
           "levels": {
-            "junior":    { "label": "Junior Developer / Engineer",  "min": 30000, "mid": 35000, "max": 40000 },
-            "mid":       { "label": "Mid-Level Engineer",           "min": 40000, "mid": 47500, "max": 55000 },
-            "senior":    { "label": "Senior Engineer / Tech Lead",  "min": 55000, "mid": 65000, "max": 75000 },
-            "principal": { "label": "Principal / Staff Engineer",   "min": 75000, "mid": 87500, "max": 100000 }
+            "junior": {
+              "label": "Junior Developer / Engineer",
+              "min": 30000,
+              "mid": 35000,
+              "max": 40000
+            },
+            "mid": {
+              "label": "Mid-Level Engineer",
+              "min": 40000,
+              "mid": 47500,
+              "max": 55000
+            },
+            "senior": {
+              "label": "Senior Engineer / Tech Lead",
+              "min": 55000,
+              "mid": 65000,
+              "max": 75000
+            },
+            "principal": {
+              "label": "Principal / Staff Engineer",
+              "min": 75000,
+              "mid": 87500,
+              "max": 100000
+            }
           }
         }
       },
@@ -440,70 +479,210 @@
           "label": "Customer Support",
           "shortLabel": "Cust. Support",
           "levels": {
-            "entry":  { "label": "Entry-Level Agent",       "min": 18000, "mid": 21000, "max": 24000 },
-            "mid":    { "label": "Experienced Agent",        "min": 24000, "mid": 27000, "max": 30000 },
-            "senior": { "label": "Team Lead / Supervisor",   "min": 28000, "mid": 33000, "max": 38000 }
+            "entry": {
+              "label": "Entry-Level Agent",
+              "min": 18000,
+              "mid": 21000,
+              "max": 24000
+            },
+            "mid": {
+              "label": "Experienced Agent",
+              "min": 24000,
+              "mid": 27000,
+              "max": 30000
+            },
+            "senior": {
+              "label": "Team Lead / Supervisor",
+              "min": 28000,
+              "mid": 33000,
+              "max": 38000
+            }
           }
         },
         "productManager": {
           "label": "Product Manager",
           "shortLabel": "Product Mgr",
           "levels": {
-            "junior":   { "label": "Junior PM",              "min": 32000, "mid": 38000, "max": 44000 },
-            "mid":      { "label": "Product Manager",         "min": 44000, "mid": 53000, "max": 62000 },
-            "senior":   { "label": "Senior Product Manager",  "min": 62000, "mid": 72000, "max": 82000 },
-            "director": { "label": "Product Director",        "min": 82000, "mid": 95000, "max": 110000 }
+            "junior": {
+              "label": "Junior PM",
+              "min": 32000,
+              "mid": 38000,
+              "max": 44000
+            },
+            "mid": {
+              "label": "Product Manager",
+              "min": 44000,
+              "mid": 53000,
+              "max": 62000
+            },
+            "senior": {
+              "label": "Senior Product Manager",
+              "min": 62000,
+              "mid": 72000,
+              "max": 82000
+            },
+            "director": {
+              "label": "Product Director",
+              "min": 82000,
+              "mid": 95000,
+              "max": 110000
+            }
           }
         },
         "compliance": {
           "label": "Compliance",
           "shortLabel": "Compliance",
           "levels": {
-            "officer":       { "label": "Compliance Officer",     "min": 25000, "mid": 31000, "max": 37000 },
-            "manager":       { "label": "Compliance Manager",     "min": 37000, "mid": 44000, "max": 51000 },
-            "seniorManager": { "label": "Senior Compliance Mgr",  "min": 51000, "mid": 60000, "max": 70000 },
-            "director":      { "label": "Compliance Director",    "min": 70000, "mid": 82500, "max": 95000 }
+            "officer": {
+              "label": "Compliance Officer",
+              "min": 25000,
+              "mid": 31000,
+              "max": 37000
+            },
+            "manager": {
+              "label": "Compliance Manager",
+              "min": 37000,
+              "mid": 44000,
+              "max": 51000
+            },
+            "seniorManager": {
+              "label": "Senior Compliance Mgr",
+              "min": 51000,
+              "mid": 60000,
+              "max": 70000
+            },
+            "director": {
+              "label": "Compliance Director",
+              "min": 70000,
+              "mid": 82500,
+              "max": 95000
+            }
           }
         },
         "marketingAffiliate": {
           "label": "Marketing & Affiliate",
           "shortLabel": "Marketing",
           "levels": {
-            "executive": { "label": "Marketing Executive",            "min": 22000, "mid": 27000, "max": 32000 },
-            "manager":   { "label": "Marketing / Affiliate Mgr",      "min": 32000, "mid": 39000, "max": 46000 },
-            "senior":    { "label": "Senior Affiliate Manager",       "min": 46000, "mid": 55000, "max": 64000 },
-            "head":      { "label": "Head of Marketing / Affiliates", "min": 60000, "mid": 68000, "max": 76000 },
-            "director":  { "label": "Marketing / Affiliate Director", "min": 76000, "mid": 88000, "max": 100000 }
+            "executive": {
+              "label": "Marketing Executive",
+              "min": 22000,
+              "mid": 27000,
+              "max": 32000
+            },
+            "manager": {
+              "label": "Marketing / Affiliate Mgr",
+              "min": 32000,
+              "mid": 39000,
+              "max": 46000
+            },
+            "senior": {
+              "label": "Senior Affiliate Manager",
+              "min": 46000,
+              "mid": 55000,
+              "max": 64000
+            },
+            "head": {
+              "label": "Head of Marketing / Affiliates",
+              "min": 60000,
+              "mid": 68000,
+              "max": 76000
+            },
+            "director": {
+              "label": "Marketing / Affiliate Director",
+              "min": 76000,
+              "mid": 88000,
+              "max": 100000
+            }
           }
         },
         "crmVipOps": {
           "label": "CRM, VIP & Operations",
           "shortLabel": "CRM/VIP/Ops",
           "levels": {
-            "coordinator": { "label": "Casino Coordinator / CRM Exec", "min": 18000, "mid": 21000, "max": 24000 },
-            "vipManager":  { "label": "VIP Account Manager",           "min": 30000, "mid": 37000, "max": 44000 },
-            "crmManager":  { "label": "CRM Manager",                   "min": 30000, "mid": 37000, "max": 44000 },
-            "seniorVip":   { "label": "Senior VIP Mgr / Head of CRM",  "min": 44000, "mid": 52000, "max": 60000 },
-            "director":    { "label": "Director of CRM / VIP",         "min": 60000, "mid": 70000, "max": 80000 }
+            "coordinator": {
+              "label": "Casino Coordinator / CRM Exec",
+              "min": 18000,
+              "mid": 21000,
+              "max": 24000
+            },
+            "vipManager": {
+              "label": "VIP Account Manager",
+              "min": 30000,
+              "mid": 37000,
+              "max": 44000
+            },
+            "crmManager": {
+              "label": "CRM Manager",
+              "min": 30000,
+              "mid": 37000,
+              "max": 44000
+            },
+            "seniorVip": {
+              "label": "Senior VIP Mgr / Head of CRM",
+              "min": 44000,
+              "mid": 52000,
+              "max": 60000
+            },
+            "director": {
+              "label": "Director of CRM / VIP",
+              "min": 60000,
+              "mid": 70000,
+              "max": 80000
+            }
           }
         },
         "director": {
           "label": "Director / Executive",
           "shortLabel": "Director",
           "levels": {
-            "director":       { "label": "Director",       "min": 60000, "mid": 70000,  "max": 80000  },
-            "seniorDirector": { "label": "Senior Director", "min": 80000, "mid": 92500,  "max": 105000 },
-            "cLevel":         { "label": "C-Level / MD",   "min": 105000, "mid": 120000, "max": 140000 }
+            "director": {
+              "label": "Director",
+              "min": 60000,
+              "mid": 70000,
+              "max": 80000
+            },
+            "seniorDirector": {
+              "label": "Senior Director",
+              "min": 80000,
+              "mid": 92500,
+              "max": 105000
+            },
+            "cLevel": {
+              "label": "C-Level / MD",
+              "min": 105000,
+              "mid": 120000,
+              "max": 140000
+            }
           }
         },
         "technology": {
           "label": "Technology & Engineering",
           "shortLabel": "Tech/Eng",
           "levels": {
-            "junior": { "label": "Junior Developer / Engineer",  "min": 28000, "mid": 32000, "max": 36000 },
-            "mid":    { "label": "Mid-Level Engineer",           "min": 36000, "mid": 45000, "max": 54000 },
-            "senior": { "label": "Senior Engineer / Tech Lead",  "min": 54000, "mid": 65000, "max": 76000 },
-            "principal": { "label": "Principal / Staff Engineer", "min": 76000, "mid": 90000, "max": 105000 }
+            "junior": {
+              "label": "Junior Developer / Engineer",
+              "min": 28000,
+              "mid": 32000,
+              "max": 36000
+            },
+            "mid": {
+              "label": "Mid-Level Engineer",
+              "min": 36000,
+              "mid": 45000,
+              "max": 54000
+            },
+            "senior": {
+              "label": "Senior Engineer / Tech Lead",
+              "min": 54000,
+              "mid": 65000,
+              "max": 76000
+            },
+            "principal": {
+              "label": "Principal / Staff Engineer",
+              "min": 76000,
+              "mid": 90000,
+              "max": 105000
+            }
           }
         }
       },
