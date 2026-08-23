@@ -1905,6 +1905,7 @@
 }
 .tax-disclaimer p { margin: 0; }
 .tax-disclaimer strong { color: var(--color-text); }
+.tax-disclaimer-crossborder { border-left: 3px solid var(--color-warning); padding-left: var(--space-3, 12px); }
 .tax-sources { border-top: 1px solid var(--color-border); padding-top: var(--space-2); }
 .tax-last-verified { font-style: italic; }
 

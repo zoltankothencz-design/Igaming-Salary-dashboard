@@ -6,8 +6,9 @@ let FX_EUR_GBP = 0.855;
 let FX_UPDATED = '30 July 2026';
 let FX_SOURCE = 'European Central Bank reference rate';
 
-// === TAX ESTIMATION CONFIG (Malta only — Gibraltar delegated to GIBS/ABS functions below) ===
-// Malta 2026 single-person brackets. Source: PwC Malta Tax Summary 2026.
+// === TAX ESTIMATION CONFIG ===
+// Malta: 2026 single-person brackets. Source: PwC Malta Tax Summary 2026 / cfr.gov.mt.
+// Cyprus: 2024/2025 brackets. Source: Cyprus Tax Dept / PwC Cyprus. 50% expat exemption for qualifying employees >€55k.
 const taxConfig = {
   malta: {
     note: 'Malta single-person income tax 2026. Source: PwC Malta Tax Summary / cfr.gov.mt.',
@@ -19,6 +20,18 @@ const taxConfig = {
       { from: 60000, to: Infinity, rate: 0.35 }
     ],
     ni: { rate: 0.10, annualCap: 2414 }
+  },
+  cyprus: {
+    note: 'Cyprus income tax 2024/25. Source: Cyprus Tax Dept / PwC Cyprus. Brackets apply to standard employee. 50% expat exemption (Art. 8(23A)) for qualifying new residents earning >€55k — halves effective tax on qualifying portion.',
+    personalAllowance: 0,
+    brackets: [
+      { from: 0,     to: 19500,    rate: 0    },
+      { from: 19500, to: 28000,    rate: 0.20 },
+      { from: 28000, to: 36300,    rate: 0.25 },
+      { from: 36300, to: 60000,    rate: 0.30 },
+      { from: 60000, to: Infinity, rate: 0.35 }
+    ],
+    ni: { rate: 0.088, annualCap: 5285 }
   }
 };
 
@@ -59,6 +72,11 @@ const colData = {
     label: 'Malta', rentMonthly: 1100, rentCurrency: 'EUR', currencySymbol: '€',
     colIndex: 65, sourceLabel: 'Numbeo 2026 — Malta',
     sourceUrl: 'https://www.numbeo.com/cost-of-living/in/Malta'
+  },
+  cyprus: {
+    label: 'Cyprus (Limassol)', rentMonthly: 1400, rentCurrency: 'EUR', currencySymbol: '€',
+    colIndex: 80, sourceLabel: 'Numbeo 2026 — Limassol',
+    sourceUrl: 'https://www.numbeo.com/cost-of-living/in/Limassol'
   }
 };
 
@@ -85,7 +103,8 @@ const salaryVerification = {
     compliance:         { officer: 'confirmed', manager: 'typical', seniorManager: 'estimated', director: 'estimated' },
     marketingAffiliate: { executive: 'confirmed', manager: 'confirmed', senior: 'typical', head: 'estimated', director: 'estimated' },
     crmVipOps:          { coordinator: 'confirmed', vipManager: 'confirmed', crmManager: 'typical', seniorVip: 'estimated', director: 'estimated' },
-    director:           { director: 'typical', seniorDirector: 'estimated', cLevel: 'estimated' }
+    director:           { director: 'typical', seniorDirector: 'estimated', cLevel: 'estimated' },
+    technology:         { junior: 'estimated', mid: 'estimated', senior: 'estimated', principal: 'estimated' }
   },
   malta: {
     customerSupport:    { entry: 'typical', mid: 'typical',   senior: 'estimated'  },
@@ -93,7 +112,17 @@ const salaryVerification = {
     compliance:         { officer: 'typical', manager: 'typical', seniorManager: 'estimated', director: 'estimated' },
     marketingAffiliate: { executive: 'typical', manager: 'typical', senior: 'estimated', head: 'estimated', director: 'estimated' },
     crmVipOps:          { coordinator: 'typical', vipManager: 'typical', crmManager: 'typical', seniorVip: 'estimated', director: 'estimated' },
-    director:           { director: 'estimated', seniorDirector: 'estimated', cLevel: 'estimated' }
+    director:           { director: 'estimated', seniorDirector: 'estimated', cLevel: 'estimated' },
+    technology:         { junior: 'estimated', mid: 'estimated', senior: 'estimated', principal: 'estimated' }
+  },
+  cyprus: {
+    customerSupport:    { entry: 'typical', mid: 'typical', senior: 'estimated' },
+    productManager:     { junior: 'estimated', mid: 'estimated', senior: 'estimated', director: 'estimated' },
+    compliance:         { officer: 'estimated', manager: 'estimated', seniorManager: 'estimated', director: 'estimated' },
+    marketingAffiliate: { executive: 'estimated', manager: 'estimated', senior: 'estimated', head: 'estimated', director: 'estimated' },
+    crmVipOps:          { coordinator: 'estimated', vipManager: 'estimated', crmManager: 'estimated', seniorVip: 'estimated', director: 'estimated' },
+    director:           { director: 'estimated', seniorDirector: 'estimated', cLevel: 'estimated' },
+    technology:         { junior: 'estimated', mid: 'estimated', senior: 'estimated', principal: 'estimated' }
   }
 };
 
@@ -178,6 +207,16 @@ const salaryData = {
             seniorDirector:  { label: 'Senior Director',           min: 100000, mid: 110000, max: 120000 },
             cLevel:         { label: 'C-Level / MD',              min: 120000, mid: 135000, max: 150000 }
           }
+        },
+        technology: {
+          label: 'Technology & Engineering',
+          shortLabel: 'Tech/Eng',
+          levels: {
+            junior:    { label: 'Junior Developer / Engineer',  min: 28000, mid: 34000, max: 42000 },
+            mid:       { label: 'Mid-Level Engineer',           min: 42000, mid: 55000, max: 65000 },
+            senior:    { label: 'Senior Engineer / Tech Lead',  min: 65000, mid: 77500, max: 90000 },
+            principal: { label: 'Principal / Staff Engineer',   min: 90000, mid: 105000, max: 120000 }
+          }
         }
       }
     },
@@ -247,6 +286,96 @@ const salaryData = {
             director:       { label: 'Director',                  min: 65000, mid: 72500, max: 80000 },
             seniorDirector:  { label: 'Senior Director',           min: 80000, mid: 87500, max: 95000 },
             cLevel:         { label: 'C-Level / MD',              min: 95000, mid: 107500, max: 120000 }
+          }
+        },
+        technology: {
+          label: 'Technology & Engineering',
+          shortLabel: 'Tech/Eng',
+          levels: {
+            junior:    { label: 'Junior Developer / Engineer',  min: 30000, mid: 35000, max: 40000 },
+            mid:       { label: 'Mid-Level Engineer',           min: 40000, mid: 47500, max: 55000 },
+            senior:    { label: 'Senior Engineer / Tech Lead',  min: 55000, mid: 65000, max: 75000 },
+            principal: { label: 'Principal / Staff Engineer',   min: 75000, mid: 87500, max: 100000 }
+          }
+        }
+      }
+    },
+
+    cyprus: {
+      label: 'Cyprus (Limassol)',
+      shortLabel: 'Cyprus',
+      currency: 'EUR',
+      currencySymbol: '€',
+      residencyThreshold: null,
+      roles: {
+        customerSupport: {
+          label: 'Customer Support',
+          shortLabel: 'Cust. Support',
+          levels: {
+            entry:  { label: 'Entry-Level Agent',      min: 18000, mid: 21000, max: 24000 },
+            mid:    { label: 'Experienced Agent',       min: 24000, mid: 27000, max: 30000 },
+            senior: { label: 'Team Lead / Supervisor',  min: 28000, mid: 33000, max: 38000 }
+          }
+        },
+        productManager: {
+          label: 'Product Manager',
+          shortLabel: 'Product Mgr',
+          levels: {
+            junior:   { label: 'Junior PM',             min: 32000, mid: 38000, max: 44000 },
+            mid:      { label: 'Product Manager',        min: 44000, mid: 53000, max: 62000 },
+            senior:   { label: 'Senior Product Manager', min: 62000, mid: 72000, max: 82000 },
+            director: { label: 'Product Director',       min: 82000, mid: 95000, max: 110000 }
+          }
+        },
+        compliance: {
+          label: 'Compliance',
+          shortLabel: 'Compliance',
+          levels: {
+            officer:       { label: 'Compliance Officer',    min: 25000, mid: 31000, max: 37000 },
+            manager:       { label: 'Compliance Manager',    min: 37000, mid: 44000, max: 51000 },
+            seniorManager: { label: 'Senior Compliance Mgr', min: 51000, mid: 60000, max: 70000 },
+            director:      { label: 'Compliance Director',   min: 70000, mid: 82500, max: 95000 }
+          }
+        },
+        marketingAffiliate: {
+          label: 'Marketing & Affiliate',
+          shortLabel: 'Marketing',
+          levels: {
+            executive: { label: 'Marketing Executive',            min: 22000, mid: 27000, max: 32000 },
+            manager:   { label: 'Marketing / Affiliate Mgr',      min: 32000, mid: 39000, max: 46000 },
+            senior:    { label: 'Senior Affiliate Manager',       min: 46000, mid: 55000, max: 64000 },
+            head:      { label: 'Head of Marketing / Affiliates', min: 60000, mid: 68000, max: 76000 },
+            director:  { label: 'Marketing / Affiliate Director', min: 76000, mid: 88000, max: 100000 }
+          }
+        },
+        crmVipOps: {
+          label: 'CRM, VIP & Operations',
+          shortLabel: 'CRM/VIP/Ops',
+          levels: {
+            coordinator: { label: 'Casino Coordinator / CRM Exec', min: 18000, mid: 21000, max: 24000 },
+            vipManager:  { label: 'VIP Account Manager',           min: 30000, mid: 37000, max: 44000 },
+            crmManager:  { label: 'CRM Manager',                   min: 30000, mid: 37000, max: 44000 },
+            seniorVip:   { label: 'Senior VIP Mgr / Head of CRM',  min: 44000, mid: 52000, max: 60000 },
+            director:    { label: 'Director of CRM / VIP',         min: 60000, mid: 70000, max: 80000 }
+          }
+        },
+        director: {
+          label: 'Director / Executive',
+          shortLabel: 'Director',
+          levels: {
+            director:       { label: 'Director',       min: 60000,  mid: 70000,  max: 80000  },
+            seniorDirector: { label: 'Senior Director', min: 80000,  mid: 92500,  max: 105000 },
+            cLevel:         { label: 'C-Level / MD',   min: 105000, mid: 120000, max: 140000 }
+          }
+        },
+        technology: {
+          label: 'Technology & Engineering',
+          shortLabel: 'Tech/Eng',
+          levels: {
+            junior:    { label: 'Junior Developer / Engineer',  min: 28000, mid: 32000, max: 36000 },
+            mid:       { label: 'Mid-Level Engineer',           min: 36000, mid: 45000, max: 54000 },
+            senior:    { label: 'Senior Engineer / Tech Lead',  min: 54000, mid: 65000, max: 76000 },
+            principal: { label: 'Principal / Staff Engineer',   min: 76000, mid: 90000, max: 105000 }
           }
         }
       }
@@ -1706,15 +1835,21 @@ function loadSalaryData() {
         FX_UPDATED = data.fx.updated || FX_UPDATED;
         FX_SOURCE = data.fx.source || FX_SOURCE;
       }
-      // Deep-merge markets
+      // Deep-merge markets — handles both existing markets (field-level merge) and new markets (full copy)
       if (data.markets) {
         for (const [mkt, mktData] of Object.entries(data.markets)) {
-          if (salaryData.markets[mkt]) {
+          if (!salaryData.markets[mkt]) {
+            salaryData.markets[mkt] = mktData;
+          } else {
             for (const [role, roleData] of Object.entries(mktData.roles || {})) {
-              if (salaryData.markets[mkt].roles[role]) {
+              if (!salaryData.markets[mkt].roles[role]) {
+                salaryData.markets[mkt].roles[role] = roleData;
+              } else {
                 for (const [lvl, lvlData] of Object.entries(roleData.levels || {})) {
                   if (salaryData.markets[mkt].roles[role].levels[lvl]) {
                     Object.assign(salaryData.markets[mkt].roles[role].levels[lvl], lvlData);
+                  } else {
+                    salaryData.markets[mkt].roles[role].levels[lvl] = lvlData;
                   }
                 }
               }

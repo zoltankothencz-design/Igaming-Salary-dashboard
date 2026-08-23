@@ -37,7 +37,7 @@ Manual ingestion: download report quarterly, extract figures, add to salary-data
 
 ## HRLadderBox — VERIFIED, HIGH CONFIDENCE
 
-lnkd.in/ds2KgGhY — **manually verified by Zoltan on 2026-08-23.**
+https://theigaming.eu/2026/05/05/igaming-salaries-report-2025-2026/ — **manually verified by Zoltan on 2026-08-23.**
 Real, usable content. Published salary survey with department-by-department tables
 for both Malta and Gibraltar. No login required (per Zoltan's verification).
 
@@ -64,5 +64,4 @@ Key notes from report:
 All verified figures have been applied to salary-data.json (customerSupport, productManager,
 compliance, marketingAffiliate for both markets).
 
-To add as auto-scraped source: verify direct URL (lnkd.in redirects, actual host may differ)
-and add to STATIC_SOURCES in scrape_sources.py with source_type=ST_SURVEY.
+Added to STATIC_SOURCES in scrape_sources.py as ST_SURVEY (2026-08-23). Note: site returns HTTP 403 to programmatic fetches — manual ingestion only; keep updating salary-data.json directly from the published tables.

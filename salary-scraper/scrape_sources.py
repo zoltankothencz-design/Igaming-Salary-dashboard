@@ -64,6 +64,7 @@ ROLE_KEYWORDS = {
     "marketingAffiliate": ["marketing", "affiliate", "seo", "crm executive", "brand"],
     "crmVipOps": ["vip", "crm", "operations manager", "casino manager", "operations director", "slot manager"],
     "director": ["director", "head of", "general manager", "c-level", "ceo", "coo", "cto", "md ", "managing director"],
+    "technology": ["software engineer", "developer", "backend", "frontend", "full stack", "devops", "qa engineer", "data engineer", "tech lead", "platform engineer", "infrastructure engineer"],
 }
 
 # Source type constants
@@ -94,6 +95,7 @@ STATIC_SOURCES = [
     ("https://www.businessofigaming.com/salaries-in-igaming/",                          "Malta",      ST_SURVEY),
     ("https://freemalta.com/hub/salary-benchmark",                                       "Malta",      ST_SURVEY),
     ("https://freemalta.com/articles/igaming-jobs-salary-malta-entry-level",            "Malta",      ST_EDITORIAL),
+    ("https://theigaming.eu/2026/05/05/igaming-salaries-report-2025-2026/",              None,         ST_SURVEY),
     ("https://www.intergameonline.com/igaming/igaming-salaries-survey",                 None,         ST_SURVEY),
     ("https://track360.io/blog/affiliate-manager-salary-report-2026",                   None,         ST_SURVEY),
     ("https://www.itjobswatch.co.uk/jobs/uk/igaming.do",                                None,         ST_CROSS_CHECK),
