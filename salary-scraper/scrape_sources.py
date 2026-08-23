@@ -1,7 +1,14 @@
 """
 Scrapes publicly accessible iGaming salary sources.
 LinkedIn and Glassdoor are skipped (require login / heavy bot protection).
-Returns a list of signal dicts: {source, title, currency, min, max, role_hint, market_hint, operator_hint, scraped_at}
+Signal schema: {source, source_type, title, currency, min, max, role_hint,
+                market_hint, operator_hint, confidence_base, scraped_at}
+
+source_type values and confidence_base defaults:
+  "survey"      — structured salary report / benchmark study       0.80
+  "editorial"   — curated guide / salary article                   0.65
+  "job_posting" — live job board listing (salary stated in ad)     0.55
+  "cross_check" — aggregated / estimated (Indeed API, Glassdoor)   0.35
 """
 import re
 import time
@@ -59,79 +66,100 @@ ROLE_KEYWORDS = {
     "director": ["director", "head of", "general manager", "c-level", "ceo", "coo", "cto", "md ", "managing director"],
 }
 
-# Sources split into: static HTML (requests only) vs JS-rendered (playwright)
+# Source type constants
+ST_SURVEY      = "survey"       # structured salary report / benchmark: confidence_base 0.80
+ST_EDITORIAL   = "editorial"    # curated guide / salary article: confidence_base 0.65
+ST_JOB_POSTING = "job_posting"  # live job board (salary in posting): confidence_base 0.55
+ST_CROSS_CHECK = "cross_check"  # aggregated / estimated: confidence_base 0.35
+
+CONFIDENCE_BASE = {
+    ST_SURVEY:      0.80,
+    ST_EDITORIAL:   0.65,
+    ST_JOB_POSTING: 0.55,
+    ST_CROSS_CHECK: 0.35,
+}
+
+# Source tuples: (url, market_hint, source_type)
+# market_hint: "Gibraltar" | "Malta" | None
+# Refresh cadence (not enforced here — handled by GH Actions schedule):
+#   survey/editorial: quarterly  |  job_posting: weekly  |  cross_check: monthly
 STATIC_SOURCES = [
-    # Gibraltar & Malta salary reports
-    ("https://careersgibraltar.com/salary-guide", "Gibraltar"),
-    ("https://careersgibraltar.com/blog/gibraltar-salary-guide-2026", "Gibraltar"),
-    ("https://careersgibraltar.com/blog/igaming-companies-gibraltar-hiring-salaries-2026", "Gibraltar"),
-    ("https://careersgibraltar.com/blog/gibraltar-under-37500-legitimate-routes", "Gibraltar"),
-    ("https://careersgibraltar.com/work-in-gibraltar/british", "Gibraltar"),
-    ("https://impjieg.work/malta-salary-report-2026", "Malta"),
-    ("https://www.businessofigaming.com/salaries-in-igaming/", "Malta"),
-    ("https://freemalta.com/hub/salary-benchmark", "Malta"),
-    ("https://freemalta.com/articles/igaming-jobs-salary-malta-entry-level", "Malta"),
-    ("https://www.intergameonline.com/igaming/igaming-salaries-survey", None),
-    ("https://track360.io/blog/affiliate-manager-salary-report-2026", None),
-    ("https://www.itjobswatch.co.uk/jobs/uk/igaming.do", None),
-    # Job boards (no login)
-    ("https://bigbetjobs.com/jobs/gibraltar/", "Gibraltar"),
-    ("https://bigbetjobs.com/jobs/leadership/", None),
-    ("https://bigbetjobs.com/jobs/operations-and-logistics/", None),
-    ("https://www.bettingjobs.com/", None),
-    ("https://www.bettingjobs.com/operations/", None),
-    ("https://www.bettingjobs.com/compliance-legal/", None),
-    ("https://www.bettingjobs.com/product/", None),
-    ("https://igamingcentre.com/jobs", None),
-    ("https://hirify.me/igaming-jobs", None),
-    ("https://hirify.me/jobs/713355-regional-managing-director-group-ceo-igaming", None),
-    ("https://hirify.me/jobs/747610-product-owner-igaming", None),
-    ("https://careersgibraltar.com/industries/prediction-markets", "Gibraltar"),
-    ("https://www.jobmatchingpartner.com/jobs/8020317-finance-manager-igaming", None),
-    ("https://3s.info/en/igaming-job/", None),
+    # === STREAM 1: Salary surveys / benchmarks (quarterly) ===
+    ("https://careersgibraltar.com/salary-guide",                                        "Gibraltar", ST_SURVEY),
+    ("https://careersgibraltar.com/blog/gibraltar-salary-guide-2026",                   "Gibraltar", ST_SURVEY),
+    ("https://careersgibraltar.com/blog/igaming-companies-gibraltar-hiring-salaries-2026", "Gibraltar", ST_EDITORIAL),
+    ("https://careersgibraltar.com/blog/gibraltar-under-37500-legitimate-routes",       "Gibraltar", ST_EDITORIAL),
+    ("https://careersgibraltar.com/work-in-gibraltar/british",                          "Gibraltar", ST_EDITORIAL),
+    ("https://impjieg.work/malta-salary-report-2026",                                   "Malta",      ST_SURVEY),
+    ("https://www.businessofigaming.com/salaries-in-igaming/",                          "Malta",      ST_SURVEY),
+    ("https://freemalta.com/hub/salary-benchmark",                                       "Malta",      ST_SURVEY),
+    ("https://freemalta.com/articles/igaming-jobs-salary-malta-entry-level",            "Malta",      ST_EDITORIAL),
+    ("https://www.intergameonline.com/igaming/igaming-salaries-survey",                 None,         ST_SURVEY),
+    ("https://track360.io/blog/affiliate-manager-salary-report-2026",                   None,         ST_SURVEY),
+    ("https://www.itjobswatch.co.uk/jobs/uk/igaming.do",                                None,         ST_CROSS_CHECK),
+    ("https://www.igamingnext.com/jobs/salary-guide/",                                  None,         ST_EDITORIAL),
+    ("https://www.casinobeats.com/igaming-salary-guide/",                               None,         ST_EDITORIAL),
+    ("https://eworkforce.eu/igaming-salaries/",                                         None,         ST_EDITORIAL),
+    # === STREAM 2: Live job boards (weekly) ===
+    ("https://bigbetjobs.com/jobs/gibraltar/",                                           "Gibraltar", ST_JOB_POSTING),
+    ("https://bigbetjobs.com/jobs/leadership/",                                          None,         ST_JOB_POSTING),
+    ("https://bigbetjobs.com/jobs/operations-and-logistics/",                           None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/",                                                     None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/operations/",                                          None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/compliance-legal/",                                   None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/product/",                                             None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/marketing-affiliates/",                               None,         ST_JOB_POSTING),
+    ("https://www.bettingjobs.com/management/",                                          None,         ST_JOB_POSTING),
+    ("https://igamingcentre.com/jobs",                                                   None,         ST_JOB_POSTING),
+    ("https://hirify.me/igaming-jobs",                                                   None,         ST_JOB_POSTING),
+    ("https://hirify.me/jobs/713355-regional-managing-director-group-ceo-igaming",      None,         ST_JOB_POSTING),
+    ("https://hirify.me/jobs/747610-product-owner-igaming",                             None,         ST_JOB_POSTING),
+    ("https://careersgibraltar.com/industries/prediction-markets",                      "Gibraltar",  ST_JOB_POSTING),
+    ("https://www.jobmatchingpartner.com/jobs/8020317-finance-manager-igaming",         None,         ST_JOB_POSTING),
+    ("https://3s.info/en/igaming-job/",                                                  None,         ST_JOB_POSTING),
+    # Pentasia — specialist iGaming recruiter (Gibraltar + Malta)
+    ("https://www.pentasia.com/jobs/?location=Gibraltar",                                "Gibraltar",  ST_JOB_POSTING),
+    ("https://www.pentasia.com/jobs/?location=Malta",                                    "Malta",      ST_JOB_POSTING),
+    # Recruiter4You Malta
+    ("https://www.recruiter4you.com/jobs/",                                              "Malta",      ST_JOB_POSTING),
+    # Careerjet Malta iGaming
+    ("https://www.careerjet.com.mt/search/jobs?s=igaming&l=Malta",                     "Malta",      ST_JOB_POSTING),
+    # Broadwing — Malta tech/iGaming specialist
+    ("https://www.broadwing.eu/jobs",                                                    "Malta",      ST_JOB_POSTING),
     # Company career pages (non-LinkedIn)
-    ("https://betclicgroup.com/en/people", None),
-    ("https://lottomart.com/en-gb/careers", None),
-    ("https://www.recruitgibraltar.com/jobsearchresults", "Gibraltar"),
-    ("https://l1.com/jobs?department=Operations/", None),
-    # Additional iGaming salary surveys and industry reports
-    ("https://www.igamingnext.com/jobs/salary-guide/", None),
-    ("https://www.casinobeats.com/igaming-salary-guide/", None),
-    ("https://eworkforce.eu/igaming-salaries/", None),
-    # UK job boards with salary filters -- broader coverage
-    ("https://www.bettingjobs.com/marketing-affiliates/", None),
-    ("https://www.bettingjobs.com/management/", None),
-    # FX / finance pages (for context)
-    ("https://wise.com/gb/currency-converter/eur-to-gbp-rate?amount", None),
-    ("https://www.poundsterlinglive.com/data/currencies/eur-pairs/EURGBP-exchange-rate", None),
+    ("https://betclicgroup.com/en/people",                                               None,         ST_JOB_POSTING),
+    ("https://lottomart.com/en-gb/careers",                                              None,         ST_JOB_POSTING),
+    ("https://www.recruitgibraltar.com/jobsearchresults",                               "Gibraltar",  ST_JOB_POSTING),
+    ("https://l1.com/jobs?department=Operations/",                                       None,         ST_JOB_POSTING),
+    # FX / finance pages (for context only, no salary signals expected)
+    ("https://www.poundsterlinglive.com/data/currencies/eur-pairs/EURGBP-exchange-rate", None,        ST_CROSS_CHECK),
 ]
 
 # Playwright-only (JS-rendered) sources
 JS_SOURCES = [
-    ("https://hirico.io/salaries/customer_support/mid", "Malta"),
-    ("https://hirico.io/", None),
-    ("https://www.reveliolabs.com/companies/flutter-entertainment/employees", None),
-    ("https://betssongroup.com/careers/available-jobs/", None),
-    ("https://www.anyworkanywhere.com/job/german-speaking-customer-account-advisor-relocation-to-malta/", "Malta"),
-    ("https://igameers.com/guides/igaming-salaries-malta-2026", "Malta"),
-    ("https://engagetalent.castillians.com/castille-malta-salary-benchmark-2026", "Malta"),
-    ("https://www.boston-link.com/salary-reports", None),
-    ("https://portal.careerfinders.com.cy/job-listing?category=OG+", None),
-    ("https://es.jooble.org/trabajo-marketing-ingles/Gibraltar", "Gibraltar"),
-    ("https://startup.jobs/ai-director-igaming-idol-8781716", None),
-    ("https://www.recruiter4you.com/jobs/8000747-aml-rg-specialist", None),
+    # === STREAM 1: Surveys / benchmarks ===
+    ("https://hirico.io/salaries/customer_support/mid",                                  "Malta",      ST_SURVEY),
+    ("https://hirico.io/",                                                               None,          ST_SURVEY),
+    ("https://igameers.com/guides/igaming-salaries-malta-2026",                         "Malta",       ST_SURVEY),
+    ("https://engagetalent.castillians.com/castille-malta-salary-benchmark-2026",       "Malta",       ST_SURVEY),
+    # === STREAM 2: Job boards / company pages ===
+    ("https://www.reveliolabs.com/companies/flutter-entertainment/employees",           None,           ST_CROSS_CHECK),
+    ("https://betssongroup.com/careers/available-jobs/",                                None,           ST_JOB_POSTING),
+    ("https://www.anyworkanywhere.com/job/german-speaking-customer-account-advisor-relocation-to-malta/", "Malta", ST_JOB_POSTING),
+    ("https://www.boston-link.com/salary-reports",                                      None,           ST_EDITORIAL),  # form-gated; job listings accessible
+    ("https://portal.careerfinders.com.cy/job-listing?category=OG+",                   None,           ST_JOB_POSTING),
+    ("https://es.jooble.org/trabajo-marketing-ingles/Gibraltar",                        "Gibraltar",    ST_JOB_POSTING),
+    ("https://startup.jobs/ai-director-igaming-idol-8781716",                           None,           ST_JOB_POSTING),
+    ("https://www.recruiter4you.com/jobs/8000747-aml-rg-specialist",                   None,           ST_JOB_POSTING),
     # Company JS-rendered pages (teamtailor + React career sites)
-    ("https://jobs.ashbyhq.com/b2spin", None),       # React app, requires JS
-    ("https://careers.eeze.com/jobs", None),          # teamtailor-based
-    ("https://finnplay.teamtailor.com/jobs", None),   # teamtailor
-    ("https://hiring.over99.com/jobs", None),         # teamtailor-style
-    ("https://fungies.io", None),
-    # Entain: JS-rendered teamtailor career site; static returns only cookie banner
-    ("https://entaincareers.com/job-search/?location=gibraltar", "Gibraltar"),
-    ("https://entaincareers.com/job-search/", None),
-    # Flutter: JS-rendered career site
-    ("https://flutter.com/careers", None),
-    ("https://www.reveliolabs.com/companies/flutter-entertainment/employees", None),
+    ("https://jobs.ashbyhq.com/b2spin",                                                 None,           ST_JOB_POSTING),
+    ("https://careers.eeze.com/jobs",                                                   None,           ST_JOB_POSTING),
+    ("https://finnplay.teamtailor.com/jobs",                                            None,           ST_JOB_POSTING),
+    ("https://hiring.over99.com/jobs",                                                  None,           ST_JOB_POSTING),
+    ("https://fungies.io",                                                              None,           ST_JOB_POSTING),
+    ("https://entaincareers.com/job-search/?location=gibraltar",                        "Gibraltar",    ST_JOB_POSTING),
+    ("https://entaincareers.com/job-search/",                                           None,           ST_JOB_POSTING),
+    ("https://flutter.com/careers",                                                     None,           ST_JOB_POSTING),
 ]
 
 # Explicitly skipped (login required or bot-protected -- reported in output)
@@ -211,10 +239,14 @@ _SALARY_CONTEXT = re.compile(
 )
 
 
-def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> list[dict]:
+def _extract_signals_from_text(
+    text: str, url: str, market_hint: str | None,
+    source_type: str = ST_JOB_POSTING
+) -> list[dict]:
     signals = []
     currency = _infer_currency(text, market_hint)
     operator_hint = _get_operator_hint(url)
+    confidence_base = CONFIDENCE_BASE.get(source_type, 0.55)
     lines = text.splitlines()
     for line in lines:
         has_currency_in_line = bool(_CURRENCY_IN_LINE.search(line))
@@ -245,6 +277,8 @@ def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> 
             role = _infer_role(line)
             signals.append({
                 "source": url,
+                "source_type": source_type,
+                "confidence_base": confidence_base,
                 "title": line.strip()[:140],
                 "currency": currency,
                 "min": lo,
@@ -256,7 +290,7 @@ def _extract_signals_from_text(text: str, url: str, market_hint: str | None) -> 
     return signals
 
 
-def scrape_static(url: str, market_hint: str | None) -> list[dict]:
+def scrape_static(url: str, market_hint: str | None, source_type: str = ST_JOB_POSTING) -> list[dict]:
     try:
         r = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
         if r.status_code == 200:
@@ -264,8 +298,8 @@ def scrape_static(url: str, market_hint: str | None) -> list[dict]:
             for tag in soup(["script", "style", "nav", "footer", "header"]):
                 tag.decompose()
             text = soup.get_text(" ", strip=True)
-            sigs = _extract_signals_from_text(text, url, market_hint)
-            print(f"[static] {url} -> {len(sigs)} signals")
+            sigs = _extract_signals_from_text(text, url, market_hint, source_type)
+            print(f"[static/{source_type}] {url} -> {len(sigs)} signals")
             return sigs
         else:
             print(f"[static] {url} -> HTTP {r.status_code}")
@@ -274,7 +308,7 @@ def scrape_static(url: str, market_hint: str | None) -> list[dict]:
     return []
 
 
-def scrape_js(url: str, market_hint: str | None) -> list[dict]:
+def scrape_js(url: str, market_hint: str | None, source_type: str = ST_JOB_POSTING) -> list[dict]:
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as p:
@@ -283,8 +317,8 @@ def scrape_js(url: str, market_hint: str | None) -> list[dict]:
             page.goto(url, timeout=30000, wait_until="networkidle")
             text = page.inner_text("body")
             browser.close()
-        sigs = _extract_signals_from_text(text, url, market_hint)
-        print(f"[js] {url} -> {len(sigs)} signals")
+        sigs = _extract_signals_from_text(text, url, market_hint, source_type)
+        print(f"[js/{source_type}] {url} -> {len(sigs)} signals")
         return sigs
     except Exception as e:
         print(f"[js] {url} -> error: {e}")
@@ -295,16 +329,20 @@ def collect_all_signals(use_playwright: bool = True) -> dict:
     now = datetime.now(timezone.utc).isoformat()
     signals = []
 
-    for url, market_hint in STATIC_SOURCES:
-        sigs = scrape_static(url, market_hint)
+    for entry in STATIC_SOURCES:
+        url, market_hint = entry[0], entry[1]
+        source_type = entry[2] if len(entry) > 2 else ST_JOB_POSTING
+        sigs = scrape_static(url, market_hint, source_type)
         for s in sigs:
             s["scraped_at"] = now
         signals.extend(sigs)
         time.sleep(0.5)
 
     if use_playwright:
-        for url, market_hint in JS_SOURCES:
-            sigs = scrape_js(url, market_hint)
+        for entry in JS_SOURCES:
+            url, market_hint = entry[0], entry[1]
+            source_type = entry[2] if len(entry) > 2 else ST_JOB_POSTING
+            sigs = scrape_js(url, market_hint, source_type)
             for s in sigs:
                 s["scraped_at"] = now
             signals.extend(sigs)
