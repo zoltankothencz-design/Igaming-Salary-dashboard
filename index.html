@@ -124,8 +124,14 @@
         </div>
       </section>
 
+      <!-- KPI no-data notice (shown when selected operator has no salary band data) -->
+      <div id="kpi-no-data-notice" class="kpi-no-data-notice hide-in-compare" style="display:none" role="status" aria-live="polite">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="kpi-no-data-notice-text">No salary data available for this operator. Showing market-wide estimates as a reference.</span>
+      </div>
+
       <!-- KPI Cards -->
-      <section class="kpi-grid hide-in-compare" aria-label="Key salary metrics">
+      <section class="kpi-grid hide-in-compare" id="kpi-grid" aria-label="Key salary metrics">
         <div class="kpi-card" data-testid="kpi-avg-base">
           <div class="kpi-label">Avg Base Salary</div>
           <div class="kpi-value" id="kpi-avg-base">&pound;0</div>

@@ -679,6 +679,23 @@ function updateKPIs() {
   const mkt = state.market === 'compare' ? 'gibraltar' : state.market;
   const isEstimate = state.operator !== 'all' && !_opHasSalaryData(state.operator, mkt);
 
+  // Show/hide the no-data notice banner and dim KPI values
+  const notice = document.getElementById('kpi-no-data-notice');
+  const kpiGrid = document.getElementById('kpi-grid');
+  if (notice) {
+    if (isEstimate) {
+      const opLabel = salaryData.operators[state.operator] ? salaryData.operators[state.operator].label : state.operator;
+      const noticeText = document.getElementById('kpi-no-data-notice-text');
+      if (noticeText) noticeText.textContent = 'No salary data available for ' + opLabel + '. Showing market-wide estimates as a reference only \u2014 values are not operator-specific.';
+      notice.style.display = 'flex';
+    } else {
+      notice.style.display = 'none';
+    }
+  }
+  if (kpiGrid) {
+    kpiGrid.classList.toggle('kpi-estimate-mode', isEstimate);
+  }
+
   const avgMid = entries.reduce((sum, e) => sum + e.mid, 0) / entries.length;
   const avgComp = calcTotalComp(avgMid);
   const allMin = Math.min(...entries.map(e => e.min));
@@ -689,7 +706,7 @@ function updateKPIs() {
 
   const roleLabel = state.role === 'all' ? 'All roles' : getMarket().roles[state.role].label;
   const opLabel = state.operator === 'all' ? 'all operators' : salaryData.operators[state.operator].label;
-  const estSuffix = isEstimate ? ' \u00b7 market estimate' : '';
+  const estSuffix = isEstimate ? ' \u00b7 market est.' : '';
   document.getElementById('kpi-avg-base-sub').textContent = roleLabel + ', ' + opLabel + estSuffix;
   document.getElementById('kpi-avg-total-sub').textContent = roleLabel + ', ' + opLabel + estSuffix;
 
