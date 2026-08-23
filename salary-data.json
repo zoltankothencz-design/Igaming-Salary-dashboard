@@ -23,21 +23,21 @@
           "levels": {
             "entry": {
               "label": "Entry-Level Agent",
-              "min": 22000,
-              "mid": 25000,
+              "min": 20000,
+              "mid": 24000,
               "max": 28000
             },
             "mid": {
               "label": "Experienced Agent",
-              "min": 28000,
-              "mid": 32000,
-              "max": 36000
+              "min": 26000,
+              "mid": 30000,
+              "max": 35000
             },
             "senior": {
               "label": "Team Lead / Supervisor",
-              "min": 35000,
-              "mid": 38500,
-              "max": 42000
+              "min": 34000,
+              "mid": 38000,
+              "max": 44000
             }
           }
         },
@@ -47,27 +47,27 @@
           "levels": {
             "junior": {
               "label": "Junior PM",
-              "min": 40000,
-              "mid": 45000,
+              "min": 35000,
+              "mid": 42000,
               "max": 50000
             },
             "mid": {
               "label": "Product Manager",
               "min": 50000,
-              "mid": 57500,
-              "max": 65000
+              "mid": 62000,
+              "max": 75000
             },
             "senior": {
               "label": "Senior Product Manager",
-              "min": 65000,
-              "mid": 72500,
-              "max": 80000
+              "min": 72000,
+              "mid": 82500,
+              "max": 95000
             },
             "director": {
               "label": "Product Director",
-              "min": 85000,
-              "mid": 97500,
-              "max": 110000
+              "min": 95000,
+              "mid": 110000,
+              "max": 130000
             }
           }
         },
@@ -83,15 +83,15 @@
             },
             "manager": {
               "label": "Compliance Manager",
-              "min": 45000,
-              "mid": 52500,
-              "max": 60000
+              "min": 42000,
+              "mid": 50000,
+              "max": 58000
             },
             "seniorManager": {
               "label": "Senior Compliance Mgr",
-              "min": 60000,
-              "mid": 67500,
-              "max": 75000
+              "min": 58000,
+              "mid": 67000,
+              "max": 80000
             },
             "director": {
               "label": "Compliance Director",
@@ -107,21 +107,21 @@
           "levels": {
             "executive": {
               "label": "Marketing Executive",
-              "min": 24000,
+              "min": 25000,
               "mid": 30000,
               "max": 35000
             },
             "manager": {
               "label": "Marketing / Affiliate Mgr",
-              "min": 42000,
-              "mid": 50000,
-              "max": 58000
+              "min": 38000,
+              "mid": 44000,
+              "max": 52000
             },
             "senior": {
               "label": "Senior Affiliate Manager",
-              "min": 58000,
-              "mid": 68000,
-              "max": 78000
+              "min": 52000,
+              "mid": 62000,
+              "max": 75000
             },
             "head": {
               "label": "Head of Marketing / Affiliates",
@@ -197,6 +197,16 @@
             }
           }
         }
+      },
+      "salaryBenchmark": {
+        "hrladderbox_2026": {
+          "source": "HRLadderBox Gibraltar iGaming Salary Report (lnkd.in/ds2KgGhY)",
+          "verified": "2026-08-23",
+          "verifiedBy": "manual",
+          "confidence": 0.8,
+          "source_type": "survey",
+          "note": "Published department-by-department table. GBP52-68k mid-level range confirmed. Frontier-worker cross-border context noted."
+        }
       }
     },
     "malta": {
@@ -212,21 +222,21 @@
           "levels": {
             "entry": {
               "label": "Entry-Level Agent",
-              "min": 18000,
-              "mid": 21000,
-              "max": 24000
+              "min": 20000,
+              "mid": 23000,
+              "max": 28000
             },
             "mid": {
               "label": "Experienced Agent",
-              "min": 24000,
-              "mid": 27000,
-              "max": 30000
+              "min": 28000,
+              "mid": 32000,
+              "max": 36000
             },
             "senior": {
               "label": "Team Lead / Supervisor",
-              "min": 28000,
-              "mid": 30000,
-              "max": 32000
+              "min": 35000,
+              "mid": 40000,
+              "max": 45000
             }
           }
         },
@@ -296,9 +306,9 @@
           "levels": {
             "executive": {
               "label": "Marketing Executive",
-              "min": 22000,
-              "mid": 25000,
-              "max": 28000
+              "min": 28000,
+              "mid": 33000,
+              "max": 38000
             },
             "manager": {
               "label": "Marketing / Affiliate Mgr",
@@ -309,8 +319,8 @@
             "senior": {
               "label": "Senior Affiliate Manager",
               "min": 50000,
-              "mid": 57500,
-              "max": 65000
+              "mid": 58000,
+              "max": 68000
             },
             "head": {
               "label": "Head of Marketing / Affiliates",
@@ -385,6 +395,16 @@
               "max": 120000
             }
           }
+        }
+      },
+      "salaryBenchmark": {
+        "hrladderbox_2026": {
+          "source": "HRLadderBox Malta iGaming Salary Report (lnkd.in/ds2KgGhY)",
+          "verified": "2026-08-23",
+          "verifiedBy": "manual",
+          "confidence": 0.8,
+          "source_type": "survey",
+          "note": "Published department-by-department salary table. HQP 15% expat tax cap confirmed for €75k+ earners."
         }
       }
     }

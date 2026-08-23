@@ -6,33 +6,31 @@ let FX_EUR_GBP = 0.855;
 let FX_UPDATED = '30 July 2026';
 let FX_SOURCE = 'European Central Bank reference rate';
 
-// === TAX ESTIMATION CONFIG ===
-// Approximate effective rates — estimates only, individual circumstances vary.
+// === TAX ESTIMATION CONFIG (Malta only — Gibraltar delegated to GIBS/ABS functions below) ===
+// Malta 2026 single-person brackets. Source: PwC Malta Tax Summary 2026.
 const taxConfig = {
-  gibraltar: {
-    note: 'Gibraltar ABS — est. Single person, basic allowance ~£3,345. Source: Gibraltar Income Tax Office 2026.',
-    personalAllowance: 3345,
-    brackets: [
-      { from: 0,     to: 10000,    rate: 0.16 },
-      { from: 10000, to: 17000,    rate: 0.19 },
-      { from: 17000, to: Infinity, rate: 0.28 }
-    ],
-    ni: { rate: 0.10, annualCap: 3740 }
-  },
   malta: {
-    note: 'Malta single-person income tax — est. Source: Malta Commissioner for Revenue 2026.',
+    note: 'Malta single-person income tax 2026. Source: PwC Malta Tax Summary / cfr.gov.mt.',
     personalAllowance: 0,
     brackets: [
-      { from: 0,     to: 9100,     rate: 0    },
-      { from: 9100,  to: 14500,    rate: 0.15 },
-      { from: 14500, to: 19500,    rate: 0.25 },
-      { from: 19500, to: Infinity, rate: 0.35 }
+      { from: 0,     to: 12000,    rate: 0    },
+      { from: 12000, to: 16000,    rate: 0.15 },
+      { from: 16000, to: 60000,    rate: 0.25 },
+      { from: 60000, to: Infinity, rate: 0.35 }
     ],
-    ni: { rate: 0.10, annualCap: 2493 }
+    ni: { rate: 0.10, annualCap: 2414 }
   }
 };
 
 function calcNetSalary(gross, market) {
+  if (market === 'gibraltar') {
+    // Uses correct GIBS/ABS functions (defined below in tax section)
+    const incomeTax = Math.min(calcGibraltarGIBS(gross), calcGibraltarABS(gross));
+    const ni = calcGibraltarSIEmployee(gross);
+    const net = Math.round(gross - incomeTax - ni);
+    const effectiveRate = ((incomeTax + ni) / gross * 100).toFixed(1);
+    return { net, incomeTax, ni, effectiveRate };
+  }
   const cfg = taxConfig[market];
   if (!cfg) return { net: gross, incomeTax: 0, ni: 0, effectiveRate: '0.0' };
   const taxable = Math.max(0, gross - cfg.personalAllowance);
