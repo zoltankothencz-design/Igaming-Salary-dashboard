@@ -1,1 +1,6 @@
-{"timestamp":"2026-08-30T10:23:36Z","human":"30 August 2026, 12:23","signal_count":845}
+{
+  "timestamp": "2026-08-31T15:57:34Z",
+  "human": "31 August 2026, 15:57",
+  "signal_count": 833,
+  "skipped_sources": 26
+}
